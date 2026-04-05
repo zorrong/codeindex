@@ -1,4 +1,4 @@
-# codeindex
+# Codeindex
 
 **Vectorless, reasoning-based code index cho AI context retrieval.**
 
