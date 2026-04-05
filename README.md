@@ -118,16 +118,57 @@ Now, after every `git commit`, the index updates in seconds.
 
 ---
 
-## IDE Integration (HTTP Server)
+## IDE & AI Agent Integration
 
+`codeindex` provides a local HTTP server that acts as a context provider for your favorite AI tools.
+
+### 1. Start the Server
+Keep the server running in a background terminal:
 ```bash
 codeindex serve . --port 3131
 ```
 
-Set your system prompt in Cursor, Claude Code, or other AI tools to:
-*"Before answering code questions, call codeindex at http://localhost:3131"*
+### 2. Integration with Claude Code
+Add a helper script at `~/.claude/tools/codeindex.sh`:
+```bash
+#!/bin/bash
+# Tool: codeindex
+# Description: Get relevant code context from the local index
+QUERY="$1"
+curl -s -X POST http://localhost:3131/query \
+  -H "Content-Type: application/json" \
+  -d "{\"query\": \"$QUERY\", \"maxTokens\": 3000}" \
+  | jq -r '.context'
+```
+
+### 3. Integration with Cursor / Windsurf
+Create a `.cursorrules` or `.windsurfrules` file in your project root:
+
+```markdown
+# Codeindex Context Retrieval
+When you need to understand the codebase or follow dependency chains:
+1. Run this command to get relevant code fragments:
+   curl -s -X POST http://localhost:3131/query -d '{"query": "YOUR_QUERY"}' | jq -r '.context'
+2. Use the output to base your reasoning and implementation.
+```
+
+### 4. Integration with Cline (VSCode)
+In Cline "Plan Mode" or custom instructions, use the terminal to run:
+`codeindex query "your question" --format text`
+Then use the output fragments for context.
 
 ---
+
+## API Endpoints
+
+The server (default: `localhost:3131`) exposes:
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/health` | Server status |
+| `POST` | `/query` | Retrieve code context (Body samples in `HttpServer.ts`) |
+| `POST` | `/update` | Trigger incremental index update |
+| `GET` | `/status` | Current index statistics |
 
 ## Project Structure
 
