@@ -1,0 +1,203 @@
+/**
+ * TreeTraversal — navigate IndexTree theo query.
+ * 3 levels: Project → Module → File → Symbol
+ * Mỗi level chỉ feed summaries → rất ít token per LLM call.
+ */
+
+import type { IndexTree, ModuleNode, FileNode, SymbolNode } from "../types/TreeNode.js"
+import type { LLMClient } from "../types/LLMClient.js"
+import { TraversalReasoner, type NodeCandidate } from "../llm/TraversalReasoner.js"
+
+export interface TraversalOptions {
+  llmClient: LLMClient
+  /** Max modules to explore. Default: 3 */
+  maxModules?: number
+  /** Max files to explore per module. Default: 5 */
+  maxFiles?: number
+  /** Max symbols to select. Default: 10 */
+  maxSymbols?: number
+}
+
+export interface TraversalResult {
+  selectedFiles: FileNode[]
+  selectedSymbols: SymbolNode[]
+  /** Breadcrumb path LLM đã traverse */
+  path: string[]
+}
+
+export class TreeTraversal {
+  private readonly reasoner: TraversalReasoner
+  private readonly options: Required<TraversalOptions>
+
+  constructor(options: TraversalOptions) {
+    this.reasoner = new TraversalReasoner(options.llmClient)
+    this.options = {
+      llmClient: options.llmClient,
+      maxModules: options.maxModules ?? 3,
+      maxFiles: options.maxFiles ?? 5,
+      maxSymbols: options.maxSymbols ?? 10,
+    }
+  }
+
+  async traverse(tree: IndexTree, query: string): Promise<TraversalResult> {
+    const path: string[] = []
+    const selectedFiles: FileNode[] = []
+    const selectedSymbols: SymbolNode[] = []
+
+    // ── Level 1: Find starting modules/files ───────────────────────────────
+    let candidateNodes = tree.root.children.map((id) => tree.nodes[id]).filter(Boolean)
+
+    // Auto-descend if root has only 1 child which is a module (common case)
+    if (candidateNodes.length === 1 && candidateNodes[0]?.level === "module") {
+      const rootMod = candidateNodes[0] as ModuleNode
+      path.push(`root-descend [${rootMod.nodeId}]`)
+      candidateNodes = rootMod.children.map((id) => tree.nodes[id]).filter(Boolean)
+    }
+
+    const moduleCandidates: NodeCandidate[] = candidateNodes
+      .filter((n): n is ModuleNode => n?.level === "module")
+      .map((n) => ({
+        nodeId: n.nodeId,
+        title: n.title,
+        summary: n.shortSummary,
+      }))
+
+    let finalFileCandidates: NodeCandidate[] = candidateNodes
+      .filter((n): n is FileNode => n?.level === "file")
+      .map((n) => ({
+        nodeId: n.nodeId,
+        title: n.title,
+        summary: n.shortSummary,
+      }))
+
+    // If we have modules, let LLM pick some
+    if (moduleCandidates.length > 0) {
+      const moduleDecision = await this.reasoner.selectNodes(
+        query,
+        moduleCandidates,
+        "module",
+        this.options.maxModules
+      )
+      path.push(`modules: [${moduleDecision.selectedIds.join(", ")}]`)
+
+      // Collect files AND sub-modules from selected modules
+      for (const moduleId of moduleDecision.selectedIds) {
+        const moduleNode = tree.nodes[moduleId] as ModuleNode
+        if (!moduleNode) continue
+
+        for (const childId of moduleNode.children) {
+          const childNode = tree.nodes[childId]
+          if (childNode?.level === "file") {
+            finalFileCandidates.push({
+              nodeId: childNode.nodeId,
+              title: childNode.title,
+              summary: childNode.shortSummary,
+            })
+          } else if (childNode?.level === "module") {
+            // Also add sub-modules as potential file candidates (treat them as groups)
+            finalFileCandidates.push({
+              nodeId: childNode.nodeId,
+              title: `[Dir] ${childNode.title}`,
+              summary: childNode.shortSummary,
+            })
+          }
+        }
+      }
+    }
+
+    // If after module expansion we still have no files, use all files as fallback
+    if (finalFileCandidates.length === 0) {
+      finalFileCandidates = this.getAllFileCandidates(tree)
+    }
+
+    return this.selectFilesAndSymbols(tree, query, finalFileCandidates, path)
+  }
+
+  // ─── Helpers ──────────────────────────────────────────────────────────────
+
+  private async selectFilesAndSymbols(
+    tree: IndexTree,
+    query: string,
+    candidates: NodeCandidate[],
+    path: string[]
+  ): Promise<TraversalResult> {
+    const selectedFiles: FileNode[] = []
+    const selectedSymbols: SymbolNode[] = []
+
+    if (candidates.length === 0) {
+      return { selectedFiles, selectedSymbols, path }
+    }
+
+    const decision = await this.reasoner.selectNodes(
+      query,
+      candidates,
+      "file",
+      this.options.maxFiles
+    )
+    path.push(`selected: [${decision.selectedIds.join(", ")}]`)
+
+    // Extract files and symbols from chosen nodes
+    const symbolCandidates: NodeCandidate[] = []
+
+    for (const id of decision.selectedIds) {
+      const node = tree.nodes[id]
+      if (!node) continue
+
+      if (node.level === "file") {
+        selectedFiles.push(node as FileNode)
+        this.collectSymbols(node as FileNode, tree, symbolCandidates)
+      } else if (node.level === "module") {
+        // If LLM selected a sub-module at the "file" stage, explore its direct files
+        const mod = node as ModuleNode
+        for (const childId of mod.children) {
+          const child = tree.nodes[childId]
+          if (child?.level === "file") {
+            selectedFiles.push(child as FileNode)
+            this.collectSymbols(child as FileNode, tree, symbolCandidates)
+          }
+        }
+      }
+    }
+
+    if (symbolCandidates.length > 0) {
+      const symbolDecision = await this.reasoner.selectNodes(
+        query,
+        symbolCandidates,
+        "symbol",
+        this.options.maxSymbols
+      )
+      path.push(`symbols: [${symbolDecision.selectedIds.join(", ")}]`)
+
+      for (const symId of symbolDecision.selectedIds) {
+        const symNode = tree.nodes[symId]
+        if (symNode?.level === "symbol") selectedSymbols.push(symNode as SymbolNode)
+      }
+    }
+
+    return { selectedFiles, selectedSymbols, path }
+  }
+
+  private collectSymbols(fileNode: FileNode, tree: IndexTree, candidates: NodeCandidate[]) {
+    for (const symId of fileNode.children) {
+      const symNode = tree.nodes[symId]
+      if (symNode?.level === "symbol") {
+        candidates.push({
+          nodeId: symNode.nodeId,
+          title: `${symNode.title} (${(symNode as SymbolNode).kind})`,
+          summary: symNode.shortSummary,
+        })
+      }
+    }
+  }
+
+  private getAllFileCandidates(tree: IndexTree): NodeCandidate[] {
+    return Object.values(tree.nodes)
+      .filter((n) => n?.level === "file")
+      .map((n) => ({
+        nodeId: n!.nodeId,
+        title: n!.title,
+        summary: n!.shortSummary,
+      }))
+  }
+}
+

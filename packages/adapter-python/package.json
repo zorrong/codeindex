@@ -1,0 +1,13 @@
+{
+  "name": "@codeindex/adapter-python",
+  "version": "0.1.0",
+  "description": "Python language adapter — Phase 6 placeholder",
+  "type": "module",
+  "scripts": {
+    "build": "echo 'adapter-python: not implemented yet (Phase 6)'",
+    "test": "echo 'adapter-python: no tests yet'"
+  },
+  "dependencies": {
+    "@codeindex/core": "workspace:*"
+  }
+}

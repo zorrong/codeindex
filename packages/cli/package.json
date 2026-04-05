@@ -1,0 +1,27 @@
+{
+  "name": "@codeindex/cli",
+  "version": "0.1.0",
+  "description": "CLI interface — codeindex index / query / update",
+  "type": "module",
+  "bin": {
+    "codeindex": "./dist/cli.js"
+  },
+  "main": "./dist/cli.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "clean": "rm -rf dist",
+    "dev": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@codeindex/adapter-typescript": "workspace:*",
+    "@codeindex/core": "workspace:*",
+    "commander": "^12.0.0",
+    "dotenv": "^16.4.5",
+    "openai": "^6.33.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "vitest": "^1.6.0"
+  }
+}

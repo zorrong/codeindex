@@ -1,0 +1,20 @@
+// Types — public API
+export * from "./types/index.js"
+
+// Implementations
+export { DefaultAdapterRegistry } from "./tree/AdapterRegistry.js"
+export { TreeBuilder } from "./tree/TreeBuilder.js"
+export type { TreeBuilderOptions } from "./tree/TreeBuilder.js"
+export { TreeTraversal } from "./tree/TreeTraversal.js"
+export type { TraversalOptions, TraversalResult } from "./tree/TreeTraversal.js"
+export { Retriever } from "./retrieval/Retriever.js"
+export type { RetrieverOptions } from "./retrieval/Retriever.js"
+export { DependencyExpander } from "./retrieval/DependencyExpander.js"
+export { ContextBuilder } from "./retrieval/ContextBuilder.js"
+export { SummaryGenerator } from "./llm/SummaryGenerator.js"
+export { TraversalReasoner } from "./llm/TraversalReasoner.js"
+export { FileSystemIndexStore } from "./storage/FileSystemIndexStore.js"
+export { FileScanner } from "./storage/FileScanner.js"
+export type { ScanResult, FileScannerOptions } from "./storage/FileScanner.js"
+export { IndexManager } from "./storage/IndexManager.js"
+export type { IndexManagerOptions, BuildResult, UpdateResult, StatusResult } from "./storage/IndexManager.js"

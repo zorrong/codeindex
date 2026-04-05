@@ -1,0 +1,23 @@
+{
+  "name": "@codeindex/core",
+  "version": "0.1.0",
+  "description": "Core engine — tree index, retrieval logic, interfaces",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
+  }
+}
