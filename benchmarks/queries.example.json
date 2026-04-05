@@ -1,0 +1,14 @@
+[
+  {
+    "id": "auth-flow",
+    "query": "How does authentication work?",
+    "expectedFiles": ["src/auth/auth.service.ts", "src/auth/jwt.ts"],
+    "expectedSymbols": ["AuthService", "validateToken"]
+  },
+  {
+    "id": "db-config",
+    "query": "Where is the database connection configured?",
+    "expectedFiles": ["src/config/database.ts"],
+    "expectedSymbols": ["createConnection", "DatabaseConfig"]
+  }
+]
