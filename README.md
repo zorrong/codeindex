@@ -1,60 +1,64 @@
-# Codeindex
+# codeindex
 
-**Vectorless, reasoning-based code index cho AI context retrieval.**
+**Vectorless, reasoning-based code index for AI context retrieval.**
 
-Thay vì dump toàn bộ codebase vào prompt (50k+ tokens), `codeindex` build một hierarchical tree index và dùng LLM reasoning để tìm đúng context — giảm từ **50,000+ token xuống còn ~1,000-3,000 token** per query.
+Instead of dumping your entire codebase into a prompt (50k+ tokens), `codeindex` builds a hierarchical tree index and uses LLM reasoning to find the exact context you need — reducing token usage from **50,000+ tokens to ~1,000-3,000 tokens** per query.
 
-Inspired by [PageIndex](https://github.com/VectifyAI/PageIndex), adapted cho codebase TypeScript.
+Inspired by [PageIndex](https://github.com/VectifyAI/PageIndex), adapted for TypeScript codebases.
 
 ---
 
-## Cài đặt nhanh
+## Quick Installation
 
 ```bash
-# Clone repo
+# Clone the repo
 git clone <this-repo>
 cd codeindex
 
 # Install dependencies
 pnpm install
 
-# Build tất cả packages
+# Build all packages
 pnpm build
 
 # Link CLI globally
 cd packages/cli
 npm link
 
-# Cấu hình API Key toàn cục (CHỈ CẦN LÀM 1 LẦN)
+# Global Configuration (DO THIS ONCE)
 codeindex setup
 ```
 
 ---
 
-## Sử dụng trong project của bạn
+## Getting Started in Your Project
 
-### Bước 1 — Thiết lập toàn cục (Global Setup)
+### Step 1 — Global Setup
 
-Thay vì phải khai báo API Key cho mỗi dự án, bạn chỉ cần chạy lệnh sau một lần duy nhất khi vừa cài đặt:
+Instead of defining your API key for every project, run this command once after installation:
 
 ```bash
 codeindex setup
 ```
 
-Lệnh này sẽ hỏi bạn Provider (OpenAI, Gemini, v.v.), API Key, Model name và Base URL (nếu có).
+You will be prompted for:
+1.  **LLM Provider**: `openai`, `anthropic`, `google`, `custom`, or `ollama`.
+2.  **API Key**: Your provider's API key.
+3.  **Model Name**: Default model (e.g., `gpt-4o`, `claude-3-5-sonnet`).
+4.  **Base URL**: If using a proxy or OpenRouter (e.g., `https://openrouter.ai/api/v1`).
 
-Thông tin này sẽ được lưu tại `~/.codeindex/config.json` và áp dụng cho **tất cả** các dự án sau này.
+Configuration is saved at `~/.codeindex/config.json` and applies to **all** future projects.
 
-### Bước 2 — Khởi tạo dự án (Init project)
+### Step 2 — Initialize Project
 
-Khi bắt đầu dự án mới, bạn chỉ cần dùng `init`. Nó sẽ tự nhận diện cấu hình toàn cục của bạn:
+In a new project directory, simply run:
 
 ```bash
 cd /path/to/your-project
 codeindex init
 ```
 
-Nhấn **Enter** để xác nhận các giá trị mặc định được lấy từ `setup`. File `.codeindex.json` sẽ được tạo:
+The `init` command automatically detects your global settings. Press **Enter** to confirm. This creates a `.codeindex.json` file:
 
 ```json
 {
@@ -65,103 +69,52 @@ Nhấn **Enter** để xác nhận các giá trị mặc định được lấy 
 ```
 
 > [!TIP]
-> Bạn vẫn có thể ghi đè (override) cấu hình toàn cục bằng cách sửa file `.codeindex.json` dự án hoặc dùng biến môi trường.
+> You can still override global settings by editing the local `.codeindex.json` or using environment variables.
 
-**Thứ tự ưu tiên (Priority):**
-`Mặc định < Toàn cục (~/.codeindex) < Dự án (.codeindex.json) < Biến môi trường (ENV) < CLI flags`
+**Priority Order:**
+`Defaults < Global (~/.codeindex) < Project (.codeindex.json) < Environment Variables (ENV) < CLI Flags`
 
-**Providers được hỗ trợ:**
-| Provider | Biến ENV | Model mặc định |
-|---|---|---|
-| `openai` | `OPENAI_API_KEY` | `gpt-4o` |
-| `anthropic` | `ANTHROPIC_API_KEY` | `claude-sonnet-4-5` |
-| `google` | `GOOGLE_API_KEY` | `gemini-1.5-flash` |
-| `custom` | `CUSTOM_API_KEY` | `gpt-4o-compatible` |
-| `ollama` | _(không cần)_ | `llama3.2` |
+---
 
-### Bước 3 — Build index lần đầu
+### Step 3 — Build the Initial Index
 
 ```bash
 codeindex index .
 ```
 
-Output:
-```
-📁 Indexing: /your-project
-🤖 Provider: openai / gpt-4o
-📂 Index dir: .index
-
-✅ Index built successfully!
-   Files indexed : 142
-   Symbols found : 891
-   Duration      : 47.3s
-   Output        : /your-project/.index/
-```
-
-### Bước 4 — Query
+### Step 4 — Query
 
 ```bash
 codeindex query "How does authentication work?"
 ```
 
-Output sẵn sàng paste vào Claude/GPT:
-```
-=== src/auth/auth.service.ts ===
-// Handles JWT-based authentication
-class AuthService {
-  async login(dto: LoginDto): Promise<TokenPair> { ... }
-  validateToken(token: string): JwtPayload { ... }
-}
-
-// --- Dependencies (signatures only) ---
-// src/user/user.service.ts
-class UserService
-```
+Output is formatted and ready to paste into LLMs like Claude or ChatGPT.
 
 ---
 
 ## Commands
 
 ```bash
-codeindex setup                # Cấu hình API Key/Provider toàn cục
-codeindex init [path]          # Setup config file cho project mới
-codeindex index [path]         # Full rebuild index dự án
-codeindex query "<text>"       # Query và lấy code context
-codeindex update [path]        # Update index (sau git commit)
-codeindex status [path]        # Kiểm tra sức khỏe index
-codeindex serve [path]         # Start server cho IDE integration
-```
-
-### Options hay dùng
-
-```bash
-# Query với output dạng JSON
-codeindex query "auth flow" --format json
-
-# Giới hạn token output
-codeindex query "payment logic" --max-tokens 2000
-
-# Không expand dependencies
-codeindex query "UserService" --no-deps
-
-# Verbose — xem LLM traversal path
-codeindex query "how login works" -v
-
-# Serve trên port khác
-codeindex serve . --port 4000
+codeindex setup                # Global configuration (API Key, Provider)
+codeindex init [path]          # Initialize project-specific config
+codeindex index [path]         # Build/rebuild project index
+codeindex query "<text>"       # Query the index for context
+codeindex update [path]        # Incremental update (e.g., after git commit)
+codeindex status [path]        # Check index health and stats
+codeindex serve [path]         # Start HTTP server for IDE integration
 ```
 
 ---
 
-## Auto-update sau mỗi git commit
+## Git Integration (Auto-update)
 
 ```bash
-# Copy git hook vào project của bạn
+# Copy git hook to your project
 cp packages/cli/src/hooks/post-commit.sh /your-project/.git/hooks/post-commit
 chmod +x /your-project/.git/hooks/post-commit
 ```
 
-Sau đó mỗi `git commit`, index tự update chỉ các files thay đổi (thường < 5 giây).
+Now, after every `git commit`, the index updates in seconds.
 
 ---
 
@@ -171,108 +124,34 @@ Sau đó mỗi `git commit`, index tự update chỉ các files thay đổi (th�
 codeindex serve . --port 3131
 ```
 
-### Dùng với Claude Code / Cursor / bất kỳ AI tool nào
-
-```bash
-# Thêm vào system prompt của bạn:
-# "Before answering code questions, call codeindex at http://localhost:3131"
-
-# Hoặc query thủ công và copy context:
-curl -s -X POST http://localhost:3131/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "how does payment processing work?"}' \
-  | jq -r '.context'
-```
-
-### Endpoints
-
-| Method | Path | Mô tả |
-|---|---|---|
-| `GET` | `/health` | Server health |
-| `GET` | `/status` | Index status |
-| `POST` | `/query` | Query index |
-| `POST` | `/update` | Trigger incremental update |
-
-**POST /query body:**
-```json
-{
-  "query": "how does auth work?",
-  "maxTokens": 4000,
-  "expandDeps": true,
-  "maxSymbols": 10
-}
-```
+Set your system prompt in Cursor, Claude Code, or other AI tools to:
+*"Before answering code questions, call codeindex at http://localhost:3131"*
 
 ---
 
-## Tích hợp với Claude Code (MCP-style)
-
-Thêm script này vào `~/.claude/tools/codeindex.sh`:
-
-```bash
-#!/bin/bash
-# Tool: codeindex
-# Description: Get relevant code context for a query
-QUERY="$1"
-curl -s -X POST http://localhost:3131/query \
-  -H "Content-Type: application/json" \
-  -d "{\"query\": \"$QUERY\", \"maxTokens\": 3000}" \
-  | jq -r '.context'
-```
-
----
-
-## Cấu trúc project
+## Project Structure
 
 ```
 codeindex/
 ├── packages/
-│   ├── core/                    # Core engine — language-agnostic
-│   │   ├── src/tree/            # TreeBuilder, TreeTraversal
-│   │   ├── src/retrieval/       # Retriever, DependencyExpander, ContextBuilder
-│   │   ├── src/llm/             # SummaryGenerator, TraversalReasoner
-│   │   └── src/storage/         # FileSystemIndexStore, IndexManager, FileScanner
+│   ├── core/                    # Core engine
 │   ├── adapter-typescript/      # TypeScript parser (ts-morph)
-│   └── cli/                     # CLI commands + HTTP server
+│   └── cli/                     # CLI & HTTP Server
 └── .index/                      # Generated index (gitignored)
-    ├── tree.json
-    └── meta.json
 ```
 
 ---
 
-## Token reduction estimate
+## Token Reduction Estimate
 
 | Project size | Before (dump all) | After (codeindex) | Reduction |
 |---|---|---|---|
 | Small (50 files) | ~15,000 tokens | ~800 tokens | **94%** |
 | Medium (200 files) | ~60,000 tokens | ~1,500 tokens | **97%** |
-| Large (500+ files) | context overflow | ~2,500 tokens | ✅ feasible |
+| Large (500+ files) | context overflow | ~2,500 tokens | ✅ Feasible |
 
 ---
 
-## Thêm ngôn ngữ mới (Phase 6)
+Checkout `README-Vietnamese.md` for information in Vietnamese.
 
-Implement `LanguageAdapter` interface:
-
-```typescript
-import type { LanguageAdapter } from "@codeindex/core"
-
-export class PythonAdapter implements LanguageAdapter {
-  readonly language = "python"
-  readonly fileExtensions = [".py"]
-
-  async parseFile(filePath, projectRoot): Promise<ParsedFile> {
-    // Parse .py file với Python AST (child_process hoặc tree-sitter)
-  }
-  supports(filePath: string) { return filePath.endsWith(".py") }
-  async resolveImport(...) { ... }
-}
-```
-
-Register vào `createServices.ts`:
-```typescript
-adapters: [new TypeScriptAdapter(), new PythonAdapter()]
-```
-
-Core engine không cần thay đổi gì.
+License: MIT
