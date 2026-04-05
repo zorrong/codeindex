@@ -24,20 +24,38 @@ pnpm build
 # Link CLI globally
 cd packages/cli
 npm link
+
+# Cấu hình API Key toàn cục (CHỈ CẦN LÀM 1 LẦN)
+codeindex setup
 ```
 
 ---
 
 ## Sử dụng trong project của bạn
 
-### Bước 1 — Init config
+### Bước 1 — Thiết lập toàn cục (Global Setup)
+
+Thay vì phải khai báo API Key cho mỗi dự án, bạn chỉ cần chạy lệnh sau một lần duy nhất khi vừa cài đặt:
+
+```bash
+codeindex setup
+```
+
+Lệnh này sẽ hỏi bạn Provider (OpenAI, Gemini, v.v.), API Key, Model name và Base URL (nếu có).
+
+Thông tin này sẽ được lưu tại `~/.codeindex/config.json` và áp dụng cho **tất cả** các dự án sau này.
+
+### Bước 2 — Khởi tạo dự án (Init project)
+
+Khi bắt đầu dự án mới, bạn chỉ cần dùng `init`. Nó sẽ tự nhận diện cấu hình toàn cục của bạn:
 
 ```bash
 cd /path/to/your-project
 codeindex init
 ```
 
-Tạo `.codeindex.json`:
+Nhấn **Enter** để xác nhận các giá trị mặc định được lấy từ `setup`. File `.codeindex.json` sẽ được tạo:
+
 ```json
 {
   "provider": "openai",
@@ -46,49 +64,20 @@ Tạo `.codeindex.json`:
 }
 ```
 
+> [!TIP]
+> Bạn vẫn có thể ghi đè (override) cấu hình toàn cục bằng cách sửa file `.codeindex.json` dự án hoặc dùng biến môi trường.
+
+**Thứ tự ưu tiên (Priority):**
+`Mặc định < Toàn cục (~/.codeindex) < Dự án (.codeindex.json) < Biến môi trường (ENV) < CLI flags`
+
 **Providers được hỗ trợ:**
-| Provider | Env var | Model mặc định |
+| Provider | Biến ENV | Model mặc định |
 |---|---|---|
 | `openai` | `OPENAI_API_KEY` | `gpt-4o` |
 | `anthropic` | `ANTHROPIC_API_KEY` | `claude-sonnet-4-5` |
 | `google` | `GOOGLE_API_KEY` | `gemini-1.5-flash` |
 | `custom` | `CUSTOM_API_KEY` | `gpt-4o-compatible` |
 | `ollama` | _(không cần)_ | `llama3.2` |
-
-### Bước 2 — Set API key
-
-```bash
-# Cách 1: dùng biến môi trường
-export OPENAI_API_KEY=sk-...
-# hoặc
-export ANTHROPIC_API_KEY=sk-ant-...
-# hoặc
-export GOOGLE_API_KEY=AIzaSy...
-# hoặc
-export CUSTOM_API_KEY=your-key
-
-# Cách 2: dùng file .env ở project root
-cp .env.example .env
-```
-
-Bạn cũng có thể khai báo trực tiếp trong `.codeindex.json`:
-
-```json
-{
-  "provider": "openai",
-  "model": "gpt-4o",
-  "indexDir": ".index",
-  "apiKey": "sk-..."
-}
-```
-
-Nếu bạn cần custom endpoint, thêm `CODEINDEX_BASE_URL` vào `.env`:
-
-```bash
-CODEINDEX_BASE_URL=https://your-endpoint.example.com/v1
-```
-
-Giá trị này sẽ được dùng cho các endpoint tương thích OpenAI khi chạy `index`, `query`, `update`, hoặc `serve`.
 
 ### Bước 3 — Build index lần đầu
 
@@ -134,12 +123,13 @@ class UserService
 ## Commands
 
 ```bash
-codeindex init [path]          # Setup config file
-codeindex index [path]         # Full rebuild index
-codeindex query "<text>"       # Query và get context
-codeindex update [path]        # Incremental update (sau git commit)
-codeindex status [path]        # Check index health
-codeindex serve [path]         # HTTP server cho IDE
+codeindex setup                # Cấu hình API Key/Provider toàn cục
+codeindex init [path]          # Setup config file cho project mới
+codeindex index [path]         # Full rebuild index dự án
+codeindex query "<text>"       # Query và lấy code context
+codeindex update [path]        # Update index (sau git commit)
+codeindex status [path]        # Kiểm tra sức khỏe index
+codeindex serve [path]         # Start server cho IDE integration
 ```
 
 ### Options hay dùng
