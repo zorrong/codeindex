@@ -5,6 +5,17 @@
 import * as fs from "fs"
 import * as path from "path"
 import { execSync } from "child_process"
+import { createRequire } from "module"
+
+interface IgnoreInstance {
+  add(patterns: string | IgnoreInstance | readonly string[]): this
+  ignores(pathname: string): boolean
+  filter(pathnames: readonly string[]): string[]
+}
+
+type IgnoreConstructor = () => IgnoreInstance
+
+const require = createRequire(import.meta.url)
 
 export interface ScanResult {
   /** Tất cả .ts/.tsx files trong project (absolute paths) */
@@ -38,8 +49,19 @@ const DEFAULT_IGNORE = [
 
 export class FileScanner {
   private readonly options: Required<FileScannerOptions>
+  private readonly ig: IgnoreInstance
 
   constructor(options: FileScannerOptions) {
+    const projectRoot = options.projectRoot
+    const gitignorePath = path.join(projectRoot, ".gitignore")
+
+    this.ig = require("ignore")()
+
+    if (fs.existsSync(gitignorePath)) {
+      const gitignoreContent = fs.readFileSync(gitignorePath, "utf-8")
+      this.ig.add(gitignoreContent)
+    }
+
     this.options = {
       ...options,
       ignoreDirs: [...DEFAULT_IGNORE, ...(options.ignoreDirs ?? [])],
@@ -59,10 +81,8 @@ export class FileScanner {
     const newFiles: string[] = []
     const deletedFiles: string[] = []
 
-    // Check indexed files
     for (const [relPath, indexedHash] of Object.entries(indexedHashMap)) {
       if (!allRelative.has(relPath)) {
-        // File đã bị xóa
         deletedFiles.push(relPath)
         continue
       }
@@ -74,7 +94,6 @@ export class FileScanner {
       }
     }
 
-    // Check new files
     for (const absPath of allFiles) {
       const relPath = path.relative(this.options.projectRoot, absPath)
       if (!(relPath in indexedHashMap)) {
@@ -103,7 +122,6 @@ export class FileScanner {
         .map((f) => path.join(this.options.projectRoot, f))
         .filter((f) => fs.existsSync(f))
     } catch {
-      // Fallback to full scan if git not available
       return []
     }
   }
@@ -151,9 +169,11 @@ export class FileScanner {
     }
 
     for (const entry of entries) {
-      if (this.options.ignoreDirs.includes(entry.name)) continue
-
       const fullPath = path.join(dir, entry.name)
+      const relPath = path.relative(this.options.projectRoot, fullPath)
+
+      if (this.options.ignoreDirs.includes(entry.name)) continue
+      if (this.ig.ignores(relPath)) continue
 
       if (entry.isDirectory()) {
         results.push(...this.walkDirectory(fullPath))

@@ -5,7 +5,9 @@ dist/
 .env
 
 # Generated index — không commit
-.index/
+.index/*
 
 # Logs
 *.log
+.omx/*
+benchmarks/*

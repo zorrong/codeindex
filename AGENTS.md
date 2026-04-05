@@ -1,58 +1,63 @@
 # AI Agents Guide for codeindex
 
-This project uses `codeindex` for efficient, reasoning-based codebase exploration. As an AI Agent, you should use the following tools and patterns to understand the code and provide accurate answers.
+This project uses `codeindex` for efficient, reasoning-based codebase exploration. **Always use `codeindex` first** before reading files manually or making assumptions about the codebase.
 
-## 1. Context Retrieval Strategy
+## 🚨 Critical Rule: ALWAYS Use codeindex First
 
-Instead of reading full files manually, use `codeindex query` to get a structured, dependency-aware context.
+**Before answering any question about the codebase, you MUST query the index first.**
+
+For detailed codeindex commands and rules, see: **CODERULES.md**
 
 ```bash
-# General query for logic exploration
-codeindex query "How does X work?"
+# Quick query
+codeindex query "your question"
 
-# Specific symbol search
-codeindex query "AuthService class methods"
-
-# Technical exploration with verbose reasoning path (to see how it traversal)
-codeindex query "data flow from controller to db" -v
-```
-
-## 2. Integration via Local Server (Preferred)
-
-If a local server is running (default port `3131`), you can fetch context using `curl`. This is much faster than running the full CLI if the index is already loaded.
-
-**Check server health:**
-`curl -s http://localhost:3131/health`
-
-**Execute query:**
-```bash
+# Or use HTTP API (faster if server running)
 curl -s -X POST http://localhost:3131/query \
   -H "Content-Type: application/json" \
   -d '{"query": "YOUR_QUESTION", "maxTokens": 4000}' \
   | jq -r '.context'
 ```
 
-## 3. Maintaining the Index
+## ❌ DON'T vs ✅ DO
 
-The index is updated incrementally. If you modify any files, trigger an update to keep your context fresh:
+| DON'T | DO |
+|-------|-----|
+| Read files manually to understand code | Use `codeindex query` |
+| Make assumptions about function signatures | Query to get accurate context |
+| Use grep/find for code patterns | Use HTTP API or CLI query |
+
+## Workflow for Every Task
+
+1. **Query first:** `codeindex query "<your question>"`
+2. **Get context:** Review the returned code fragments and dependency info
+3. **If needed:** Only then read specific files for more details
+4. **Update index:** After making changes, run `codeindex update`
+
+## Maintaining the Index
 
 ```bash
-# Using CLI
+# Update after file changes
 codeindex update
 
-# Using HTTP API
+# Or via HTTP
 curl -s -X POST http://localhost:3131/update
+
+# Check status
+codeindex status
 ```
 
-## 4. Troubleshooting for Agents
+## Troubleshooting
 
-- **No index found?** Run `codeindex index .` to build it.
-- **Outdated context?** Run `codeindex update`.
-- **API Key issues?** Check `codeindex setup` or environment variables (`OPENAI_API_KEY`, etc).
+| Issue | Solution |
+|-------|----------|
+| No index found | Run `codeindex index .` |
+| Outdated context | Run `codeindex update` |
+| API Key issues | Check `codeindex setup` |
 
-## 5. Summary of Symbols
+## For Complete Reference
 
-You can always get a high-level status of the index by running:
-`codeindex status`
-
-This will show you how many symbols and files are currently tracked.
+See **CODERULES.md** for:
+- Full list of query patterns
+- Detailed command options
+- Troubleshooting guide

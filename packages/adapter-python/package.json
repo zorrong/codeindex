@@ -8,6 +8,7 @@
     "test": "echo 'adapter-python: no tests yet'"
   },
   "dependencies": {
-    "@codeindex/core": "workspace:*"
+    "@codeindex/core": "workspace:*",
+    "ignore": "^5.3.2"
   }
 }

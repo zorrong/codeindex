@@ -183,6 +183,31 @@ codeindex/
 
 ---
 
+## Default Ignored Directories
+
+When running `codeindex index`, the scanner automatically:
+
+1. **Uses hardcoded defaults** for common directories:
+```typescript
+const DEFAULT_IGNORE = [
+  "node_modules",   // Dependencies
+  "dist",           // Build output
+  "build",          // Build output
+  ".git",           // Git metadata
+  ".index",         // Index data
+  "coverage",       // Test coverage reports
+  ".next",          // Next.js build
+  ".nuxt",          // Nuxt.js build
+]
+```
+
+2. **Parses your `.gitignore`** file — any directory/file patterns you already have in `.gitignore` are automatically respected.
+
+> [!TIP]
+> This means you only need to maintain one file: `.gitignore`. Just add the directories you want to ignore there, and `codeindex` will pick them up automatically.
+
+---
+
 ## Token Reduction Estimate
 
 | Project size | Before (dump all) | After (codeindex) | Reduction |

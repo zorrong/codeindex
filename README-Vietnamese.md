@@ -236,6 +236,31 @@ codeindex/
 
 ---
 
+## Các thư mục mặc định được bỏ qua
+
+Khi chạy `codeindex index`, scanner sẽ tự động:
+
+1. **Sử dụng danh sách mặc định** cho các thư mục phổ biến:
+```typescript
+const DEFAULT_IGNORE = [
+  "node_modules",   // Dependencies
+  "dist",           // Build output
+  "build",          // Build output
+  ".git",           // Git metadata
+  ".index",         // Index data
+  "coverage",       // Test coverage reports
+  ".next",          // Next.js build
+  ".nuxt",          // Nuxt.js build
+]
+```
+
+2. **Đọc file `.gitignore`** của bạn — bất kỳ thư mục/file nào đã được khai báo trong `.gitignore` sẽ tự động được bỏ qua.
+
+> [!TIP]
+> Điều này có nghĩa là bạn chỉ cần quản lý một file: `.gitignore`. Chỉ cần thêm các thư mục bạn muốn bỏ qua vào đó, `codeindex` sẽ tự động nhận biết.
+
+---
+
 ## Token reduction estimate
 
 | Project size | Before (dump all) | After (codeindex) | Reduction |

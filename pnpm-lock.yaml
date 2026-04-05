@@ -32,12 +32,18 @@ importers:
       '@codeindex/core':
         specifier: workspace:*
         version: link:../core
+      ignore:
+        specifier: ^5.3.2
+        version: 5.3.2
 
   packages/adapter-typescript:
     dependencies:
       '@codeindex/core':
         specifier: workspace:*
         version: link:../core
+      ignore:
+        specifier: ^5.3.2
+        version: 5.3.2
       ts-morph:
         specifier: ^22.0.0
         version: 22.0.0
@@ -60,6 +66,9 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.6.1
+      ignore:
+        specifier: ^5.3.2
+        version: 5.3.2
       openai:
         specifier: ^6.33.0
         version: 6.33.0
@@ -72,6 +81,10 @@ importers:
         version: 1.6.1(@types/node@20.19.37)
 
   packages/core:
+    dependencies:
+      ignore:
+        specifier: ^5.3.2
+        version: 5.3.2
     devDependencies:
       vitest:
         specifier: ^1.6.0

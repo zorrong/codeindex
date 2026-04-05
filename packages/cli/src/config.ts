@@ -121,6 +121,9 @@ export function saveGlobalConfig(config: Partial<CodeIndexConfig>): void {
 }
 
 export function resolveApiKey(config: CodeIndexConfig): string {
+  // Ollama không cần key
+  if (config.provider === "ollama") return "ollama"
+
   if (config.apiKey) return config.apiKey
 
   // Try provider-specific env vars
@@ -129,7 +132,6 @@ export function resolveApiKey(config: CodeIndexConfig): string {
     anthropic: "ANTHROPIC_API_KEY",
     google: "GOOGLE_API_KEY",
     custom: "CUSTOM_API_KEY",
-    ollama: "OLLAMA_API_KEY",
   }
 
   const envVar = envMap[config.provider]
@@ -137,9 +139,6 @@ export function resolveApiKey(config: CodeIndexConfig): string {
     const key = process.env[envVar]
     if (key) return key
   }
-
-  // Ollama không cần key
-  if (config.provider === "ollama") return "ollama"
 
   throw new Error(
     `No API key found for provider "${config.provider}". ` +

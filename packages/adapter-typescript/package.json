@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@codeindex/core": "workspace:*",
+    "ignore": "^5.3.2",
     "ts-morph": "^22.0.0"
   },
   "devDependencies": {
