@@ -193,6 +193,25 @@ codeindex/
 
 ---
 
+---
+
+## Guiding AI Agents (AGENTS.md)
+
+If you're using an AI agent (like Claude Code, Cursor, or Cline) to help with your project, create an `AGENTS.md` file in your project root to teach them how to use `codeindex`. 
+
+**Template for your project's `AGENTS.md`:**
+
+```markdown
+# AI Agents Guide for this project
+
+This project uses `codeindex` for efficient exploration. Before answering deep questions or refactoring, query the index.
+
+## Commands:
+- `codeindex query "Your question"`: To get relevant code context.
+- `codeindex update`: To refresh the index after you have made changes.
+- `curl -s -X POST http://localhost:3131/query -d '{"query": "..."}'`: To use the local server if running.
+```
+
 Checkout `README-Vietnamese.md` for information in Vietnamese.
 
 License: MIT

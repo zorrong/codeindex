@@ -265,9 +265,21 @@ export class PythonAdapter implements LanguageAdapter {
 }
 ```
 
-Register vào `createServices.ts`:
-```typescript
-adapters: [new TypeScriptAdapter(), new PythonAdapter()]
-```
+---
 
-Core engine không cần thay đổi gì.
+## Hướng dẫn AI Agent (Project-level AGENTS.md)
+
+Để giúp các Agent (như Claude Code, Cursor, Cline) biết cách tự động sử dụng `codeindex` trong dự án của bạn, hãy tạo một file `AGENTS.md` ở thư mục gốc của dự án.
+
+**Nội dung mẫu (Copy vào `AGENTS.md` dự án của bạn):**
+
+```markdown
+# Hướng dẫn AI Agent cho dự án này
+
+Dự án này sử dụng `codeindex` để lấy ngữ cảnh code chính xác. Trước khi thực hiện các thay đổi lớn hoặc giải đáp các thắc mắc chuyên sâu về logic, hãy truy vấn index:
+
+## Các lệnh Agent có thể dùng:
+- `codeindex query "Câu hỏi của bạn"`: Lấy đúng context code liên quan.
+- `codeindex update`: Cập nhật index sau khi bạn đã thay đổi mã nguồn.
+- `curl -s -X POST http://localhost:3131/query -d '{"query": "..."}'`: Nếu server đang chạy ở cổng 3131.
+```
