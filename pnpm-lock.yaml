@@ -27,6 +27,26 @@ importers:
         specifier: ^1.6.0
         version: 1.6.1(@types/node@20.19.37)
 
+  packages/adapter-cpp:
+    dependencies:
+      '@codeindex/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  packages/adapter-csharp:
+    dependencies:
+      '@codeindex/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
   packages/adapter-go:
     dependencies:
       '@codeindex/core':
@@ -37,7 +57,47 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
+  packages/adapter-java:
+    dependencies:
+      '@codeindex/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  packages/adapter-php:
+    dependencies:
+      '@codeindex/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
   packages/adapter-python:
+    dependencies:
+      '@codeindex/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  packages/adapter-rust:
+    dependencies:
+      '@codeindex/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  packages/adapter-swift:
     dependencies:
       '@codeindex/core':
         specifier: workspace:*

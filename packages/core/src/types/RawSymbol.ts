@@ -13,6 +13,9 @@ export type SymbolKind =
   | "enum"
   | "variable"
   | "constant"
+  | "struct"
+  | "module"
+  | "property"
 
 export type AccessModifier = "public" | "private" | "protected" | "internal"
 
@@ -83,4 +86,4 @@ export interface ParsedFile {
   exports: string[]
 }
 
-export type SupportedLanguage = "typescript" | "python" | "go" | "java" | "rust"
+export type SupportedLanguage = "typescript" | "python" | "go" | "java" | "rust" | "csharp" | "cpp" | "php" | "swift"

@@ -1,0 +1,24 @@
+{
+  "name": "@codeindex/adapter-csharp",
+  "version": "0.1.0",
+  "description": "C# language adapter using regex-based extraction",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'adapter-csharp: no tests yet'"
+  },
+  "dependencies": {
+    "@codeindex/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
