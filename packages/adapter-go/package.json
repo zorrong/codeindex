@@ -1,7 +1,7 @@
 {
-  "name": "@codeindex/adapter-python",
+  "name": "@codeindex/adapter-go",
   "version": "0.1.0",
-  "description": "Python language adapter using the standard ast module",
+  "description": "Go language adapter using regex-based AST extraction",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "echo 'adapter-python: no tests yet'"
+    "test": "echo 'adapter-go: no tests yet'"
   },
   "dependencies": {
     "@codeindex/core": "workspace:*"

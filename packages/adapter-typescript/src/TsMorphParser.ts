@@ -87,11 +87,37 @@ export class TsMorphParser {
     // Extract exported names
     const exports = Array.from(sourceFile.getExportedDeclarations().keys())
 
+    const importBindings: NonNullable<ParsedFile["importBindings"]> = []
+    for (const importDecl of sourceFile.getImportDeclarations()) {
+      const moduleSpecifier = importDecl.getModuleSpecifierValue()
+      const resolved = this.dependencyResolver.resolveImport(
+        moduleSpecifier,
+        sourceFile.getFilePath(),
+        this.projectRoot
+      )
+      if (resolved === null) continue
+
+      const from = path.relative(this.projectRoot, resolved)
+      const defaultImport = importDecl.getDefaultImport()?.getText()
+      const namespaceImport = importDecl.getNamespaceImport()?.getText()
+      const namedImports = importDecl.getNamedImports().map((n) => n.getName())
+      const typeOnly = (importDecl as unknown as { isTypeOnly?: () => boolean }).isTypeOnly?.()
+
+      importBindings.push({
+        from,
+        ...(defaultImport !== undefined && { defaultImport }),
+        ...(namespaceImport !== undefined && { namespaceImport }),
+        ...(namedImports.length > 0 && { namedImports }),
+        ...(typeOnly !== undefined && { typeOnly }),
+      })
+    }
+
     return {
       filePath: absolutePath,
       relativePath,
       language: "typescript",
       symbols,
+      importBindings,
       internalImports: internal.map((p) =>
         path.relative(this.projectRoot, p)
       ),

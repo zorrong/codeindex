@@ -65,6 +65,14 @@ export interface ParsedFile {
   /** Tất cả symbols trong file */
   symbols: RawSymbol[]
 
+  importBindings?: Array<{
+    from: string
+    defaultImport?: string | undefined
+    namespaceImport?: string | undefined
+    namedImports?: string[] | undefined
+    typeOnly?: boolean | undefined
+  }> | undefined
+
   /** Internal imports (trong cùng project) */
   internalImports: string[]
 

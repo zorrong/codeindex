@@ -24,6 +24,14 @@ export interface CodeIndexConfig {
   projectName?: string
   /** Verbose logging */
   verbose: boolean
+  /** HTTP server API key (optional). If set, /query, /status, /update require auth. */
+  serverApiKey?: string
+  /** CORS allow-origin value for HTTP server responses (default: "*") */
+  serverCorsOrigin?: string
+  /** Max request body size for HTTP server (bytes). */
+  serverMaxBodyBytes?: number
+  /** Simple per-IP rate limit per minute for HTTP server. */
+  serverRateLimitPerMinute?: number
 }
 
 const CONFIG_FILE = ".codeindex.json"
@@ -96,6 +104,16 @@ export function loadConfig(
   if (process.env["CODEINDEX_PROVIDER"]) {
     envConfig.provider = process.env["CODEINDEX_PROVIDER"] as CodeIndexConfig["provider"]
   }
+  if (process.env["CODEINDEX_SERVER_API_KEY"]) envConfig.serverApiKey = process.env["CODEINDEX_SERVER_API_KEY"]
+  if (process.env["CODEINDEX_SERVER_CORS_ORIGIN"]) envConfig.serverCorsOrigin = process.env["CODEINDEX_SERVER_CORS_ORIGIN"]
+  if (process.env["CODEINDEX_SERVER_MAX_BODY_BYTES"]) {
+    const v = parseInt(process.env["CODEINDEX_SERVER_MAX_BODY_BYTES"], 10)
+    if (Number.isFinite(v)) envConfig.serverMaxBodyBytes = v
+  }
+  if (process.env["CODEINDEX_SERVER_RATE_LIMIT_PER_MINUTE"]) {
+    const v = parseInt(process.env["CODEINDEX_SERVER_RATE_LIMIT_PER_MINUTE"], 10)
+    if (Number.isFinite(v)) envConfig.serverRateLimitPerMinute = v
+  }
   mergeExisting(merged, envConfig)
 
   // 4. CLI overrides
@@ -146,4 +164,3 @@ export function resolveApiKey(config: CodeIndexConfig): string {
     `or add "apiKey" to .codeindex.json`
   )
 }
-

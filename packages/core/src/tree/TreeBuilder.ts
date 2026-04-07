@@ -15,6 +15,7 @@ export interface TreeBuilderOptions {
   projectName?: string
   llmClient: LLMClient
   verbose?: boolean
+  moduleDepth?: number
 }
 
 export class TreeBuilder {
@@ -86,7 +87,7 @@ export class TreeBuilder {
       }
       nodes[fileNodeId] = fileNode
 
-      const dirPath = path.dirname(file.relativePath)
+      const dirPath = this.getModuleDirPath(file.relativePath)
       const existing = moduleMap.get(dirPath) ?? []
       existing.push(fileNodeId)
       moduleMap.set(dirPath, existing)
@@ -186,6 +187,7 @@ export class TreeBuilder {
   async updatePartial(existingTree: IndexTree, changedFiles: ParsedFile[]): Promise<IndexTree> {
     const nodes = { ...existingTree.nodes }
     const fileSummaries = await this.summaryGen.generateFileSummaries(changedFiles, 5)
+    const affectedModuleIds = new Set<string>()
 
     for (const file of changedFiles) {
       const fileNodeId = `file:${file.relativePath}`
@@ -237,17 +239,87 @@ export class TreeBuilder {
         parentId: existing?.parentId,
       }
       nodes[fileNodeId] = fileNode
+
+      const parentModuleId =
+        existing?.parentId ??
+        (nodes[`mod:${this.getModuleDirPath(file.relativePath)}`]?.level === "module"
+          ? `mod:${this.getModuleDirPath(file.relativePath)}`
+          : undefined)
+      if (parentModuleId) affectedModuleIds.add(parentModuleId)
+    }
+
+    if (affectedModuleIds.size > 0) {
+      await Promise.all(
+        Array.from(affectedModuleIds).map(async (moduleId) => {
+          const moduleNode = nodes[moduleId] as ModuleNode | undefined
+          if (!moduleNode || moduleNode.level !== "module") return
+
+          const fileNodes = Object.values(nodes).filter(
+            (n): n is FileNode => n?.level === "file" && (n as FileNode).parentId === moduleId
+          )
+
+          const summaries = fileNodes.map((f) => ({
+            relativePath: f.filePath,
+            shortSummary: f.shortSummary,
+            detailedSummary: f.detailedSummary ?? "",
+          }))
+
+          const updated = await this.summaryGen.generateModuleSummary(
+            moduleNode.dirPath,
+            summaries
+          )
+          moduleNode.shortSummary = updated.shortSummary
+          nodes[moduleId] = moduleNode
+        })
+      )
     }
 
     return { ...existingTree, nodes, builtAt: Date.now() }
   }
 
   private extractInternalRefs(symbol: RawSymbol, file: ParsedFile): string[] {
-    const refs: string[] = []
+    const refs = new Set<string>()
+
+    if (file.importBindings && file.importBindings.length > 0) {
+      for (const binding of file.importBindings) {
+        const identifiers: string[] = []
+        if (binding.defaultImport) identifiers.push(binding.defaultImport)
+        if (binding.namespaceImport) identifiers.push(binding.namespaceImport)
+        if (binding.namedImports && binding.namedImports.length > 0) {
+          identifiers.push(...binding.namedImports)
+        }
+
+        for (const ident of identifiers) {
+          if (this.containsIdentifier(symbol.fullSource, ident)) {
+            refs.add(binding.from)
+            break
+          }
+        }
+      }
+      return Array.from(refs)
+    }
+
     for (const imp of file.internalImports) {
       const baseName = path.basename(imp, path.extname(imp))
-      if (symbol.fullSource.includes(baseName)) refs.push(imp)
+      if (symbol.fullSource.includes(baseName)) refs.add(imp)
     }
-    return refs
+
+    return Array.from(refs)
+  }
+
+  private containsIdentifier(source: string, identifier: string): boolean {
+    const escaped = identifier.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    const re = new RegExp(`\\b${escaped}\\b`, "m")
+    return re.test(source)
+  }
+
+  private getModuleDirPath(fileRelativePath: string): string {
+    const dir = path.dirname(fileRelativePath)
+    const depth = this.options.moduleDepth
+    if (!depth || depth <= 0) return dir
+    if (dir === ".") return "."
+    const parts = dir.split(path.sep).filter(Boolean)
+    const sliced = parts.slice(0, depth).join(path.sep)
+    return sliced || "."
   }
 }

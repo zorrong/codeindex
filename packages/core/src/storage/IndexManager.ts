@@ -10,6 +10,8 @@ import type { ParsedFile } from "../types/RawSymbol.js"
 import { TreeBuilder } from "../tree/TreeBuilder.js"
 import { FileSystemIndexStore } from "../storage/FileSystemIndexStore.js"
 import { FileScanner } from "../storage/FileScanner.js"
+import { FileWatcher, type FileChange } from "./FileWatcher.js"
+import { ParallelSymbolExtractor } from "../retrieval/ParallelSymbolExtractor.js"
 import * as path from "path"
 
 export interface IndexManagerOptions {
@@ -44,6 +46,12 @@ export interface StatusResult {
   builtAt: number | null
   staleFiles: string[]
   isStale: boolean
+}
+
+export interface WatchOptions {
+  debounceMs?: number
+  onChange?: (change: FileChange) => void
+  onBatch?: (changes: FileChange[]) => void
 }
 
 export class IndexManager {
@@ -232,21 +240,125 @@ export class IndexManager {
     }
   }
 
+  /**
+   * Start watching for file changes and auto-update index.
+   * Returns a cleanup function.
+   */
+  startWatching(options: WatchOptions = {}): () => void {
+    const watcher = new FileWatcher(this.options.projectRoot, this.getSupportedExtensions(), {
+      debounceMs: options.debounceMs ?? 500,
+    })
+
+    watcher.on("batch", async (changes: FileChange[]) => {
+      this.log(`[IndexManager] Detected ${changes.length} file changes`)
+
+      if (options.onBatch) {
+        options.onBatch(changes)
+      }
+
+      const filePaths = changes
+        .filter((c) => c.type !== "unlink")
+        .map((c) => c.filePath)
+
+      if (filePaths.length === 0) {
+        if (changes.some((c) => c.type === "unlink")) {
+          const deletedPaths = changes
+            .filter((c) => c.type === "unlink")
+            .map((c) => path.relative(this.options.projectRoot, c.filePath))
+          await this.handleDeletedFiles(deletedPaths)
+        }
+        return
+      }
+
+      try {
+        const parsedFiles = await this.parseFiles(filePaths)
+        const existingTree = await this.store.loadTree()
+        const meta = await this.store.loadMeta()
+        if (existingTree) {
+          const updatedTree = await this.builder.updatePartial(existingTree, parsedFiles)
+          await this.store.saveTree(updatedTree)
+
+          const deletedPaths = changes
+            .filter((c) => c.type === "unlink")
+            .map((c) => path.relative(this.options.projectRoot, c.filePath))
+          if (deletedPaths.length > 0) {
+            await this.handleDeletedFiles(deletedPaths)
+          }
+
+          if (meta) {
+            const newHashMap = { ...meta.gitHashMap }
+            for (const absPath of filePaths) {
+              const relPath = path.relative(this.options.projectRoot, absPath)
+              newHashMap[relPath] = this.scanner.getFileHash(absPath)
+            }
+            for (const relPath of deletedPaths) {
+              delete newHashMap[relPath]
+            }
+
+            const finalTree =
+              deletedPaths.length > 0 ? (await this.store.loadTree()) ?? updatedTree : updatedTree
+            const totalFiles = Object.values(finalTree.nodes).filter((n) => n?.level === "file").length
+            const totalSymbols = Object.values(finalTree.nodes).filter((n) => n?.level === "symbol").length
+
+            await this.store.saveMeta({
+              ...meta,
+              gitHashMap: newHashMap,
+              builtAt: Date.now(),
+              totalFiles,
+              totalSymbols,
+            })
+          }
+
+          this.log(`[IndexManager] Index updated with ${parsedFiles.length} files`)
+        }
+      } catch (err) {
+        this.log(`[IndexManager] Watch update failed: ${(err as Error).message}`)
+      }
+    })
+
+    watcher.on("error", (error: Error) => {
+      this.log(`[IndexManager] Watcher error: ${error.message}`)
+    })
+
+    watcher.start()
+
+    return () => {
+      watcher.stop()
+    }
+  }
+
+  private async handleDeletedFiles(deletedPaths: string[]): Promise<void> {
+    const tree = await this.store.loadTree()
+    if (!tree) return
+
+    for (const relPath of deletedPaths) {
+      const fileNodeId = `file:${relPath}`
+      const fileNode = tree.nodes[fileNodeId]
+      if (fileNode) {
+        for (const childId of fileNode.children) {
+          delete tree.nodes[childId]
+        }
+        delete tree.nodes[fileNodeId]
+      }
+      await this.store.deleteFileNode(relPath)
+    }
+
+    await this.store.saveTree(tree)
+  }
+
   // ─── Helpers ──────────────────────────────────────────────────────────────
 
   private async parseFiles(filePaths: string[]): Promise<ParsedFile[]> {
-    const results: ParsedFile[] = []
-    for (const filePath of filePaths) {
-      const adapter = this.options.adapters.find((a) => a.supports(filePath))
-      if (!adapter) continue
-      try {
-        const parsed = await adapter.parseFile(filePath, this.options.projectRoot)
-        results.push(parsed)
-      } catch (err) {
-        console.warn(`[IndexManager] Failed to parse ${filePath}: ${(err as Error).message}`)
-      }
+    const extractor = new ParallelSymbolExtractor({
+      adapters: this.options.adapters,
+      projectRoot: this.options.projectRoot,
+      concurrency: 10,
+    })
+    const { parsed, errors } = await extractor.parseFiles(filePaths)
+    for (const err of errors) {
+      console.warn(`[IndexManager] Failed to parse ${err}`)
     }
-    return results
+    return parsed
   }
 
   private getSupportedExtensions(): string[] {

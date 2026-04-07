@@ -10,21 +10,27 @@ import { DEFAULT_RETRIEVAL_CONFIG } from "../types/Retrieval.js"
 import { TreeTraversal } from "../tree/TreeTraversal.js"
 import { DependencyExpander } from "./DependencyExpander.js"
 import { ContextBuilder } from "./ContextBuilder.js"
+import { TraversalCache } from "./TraversalCache.js"
 
 export interface RetrieverOptions {
   llmClient: LLMClient
   config?: Partial<RetrievalConfig>
+  cache?: TraversalCache
 }
 
 export class Retriever {
   private readonly config: RetrievalConfig
+  private readonly llmClient: LLMClient
   private readonly contextBuilder: ContextBuilder
   private readonly depExpander: DependencyExpander
+  private readonly cache: TraversalCache | undefined
 
-  constructor(private readonly options: RetrieverOptions) {
+  constructor(options: RetrieverOptions) {
     this.config = { ...DEFAULT_RETRIEVAL_CONFIG, ...options.config }
+    this.llmClient = options.llmClient
     this.contextBuilder = new ContextBuilder()
     this.depExpander = new DependencyExpander()
+    this.cache = options.cache
   }
 
   async retrieve(tree: IndexTree, query: RetrievalQuery): Promise<RetrievalResult> {
@@ -35,16 +41,47 @@ export class Retriever {
       ...(query.maxOutputTokens !== undefined && { maxOutputTokens: query.maxOutputTokens }),
     }
 
-    // Step 1: Traverse tree to find relevant files + symbols
+    const cached = this.cache?.get(query.query) ?? this.cache?.findSimilar(query.query)
+    if (cached) {
+      const selectedSymbolIds = new Set(cached.selectedSymbols.map((s) => s.nodeId))
+      const deps = config.expandDeps
+        ? this.depExpander.expand(tree, cached.selectedSymbols, selectedSymbolIds)
+        : []
+
+      const { context, estimatedTokens } = this.contextBuilder.build({
+        selectedSymbols: cached.selectedSymbols,
+        selectedFiles: cached.selectedFiles,
+        deps,
+        config,
+      })
+
+      return {
+        query: query.query,
+        files: cached.selectedFiles.map((fileNode) => ({
+          node: fileNode,
+          symbols: cached.selectedSymbols
+            .filter((s) => s.filePath === fileNode.filePath)
+            .map((s) => ({
+              node: s,
+              relevanceScore: 1.0,
+              reasoning: "Cached traversal result",
+              role: "direct" as const,
+            })),
+        })),
+        formattedContext: context,
+        estimatedTokens,
+        traversalPath: cached.path,
+      }
+    }
+
     const traversal = new TreeTraversal({
-      llmClient: this.options.llmClient,
+      llmClient: this.llmClient,
       maxSymbols: config.maxSymbols,
     })
 
-    const { selectedFiles, selectedSymbols, path } = await traversal.traverse(
-      tree,
-      query.query
-    )
+    const { selectedFiles, selectedSymbols, path } = await traversal.traverse(tree, query.query)
+
+    this.cache?.set(query.query, { selectedFiles, selectedSymbols, path })
 
     // Step 2: Expand 1-hop dependencies
     const selectedSymbolIds = new Set(selectedSymbols.map((s) => s.nodeId))
@@ -59,9 +96,6 @@ export class Retriever {
       deps,
       config,
     })
-
-    // Step 4: Assemble result
-    const fileMap = new Map(selectedFiles.map((f) => [f.nodeId, f]))
 
     return {
       query: query.query,
