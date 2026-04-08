@@ -478,6 +478,30 @@ function App() {
         </div>
       </section>
 
+      <section className="sponsor">
+        <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+          <h2>Support This Project</h2>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+            If codeindex saves you time and money, consider buying me a coffee ☕
+            Every contribution helps keep this project alive and developing new features.
+          </p>
+          <a
+            href="https://paypal.me/zorrong"
+            className="btn-sponsor"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+            </svg>
+            Donate via PayPal
+          </a>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '1rem' }}>
+            PayPal: zorrong@outlook.com
+          </p>
+        </div>
+      </section>
+
       <section className="cta">
         <h2>Ready to optimize your AI context retrieval?</h2>
         <p>Install codeindex and start building efficient AI-powered code understanding.</p>
@@ -493,7 +517,13 @@ function App() {
 
       <footer className="footer">
         <p>codeindex — Vectorless, reasoning-based code index for AI context retrieval.</p>
-        <p style={{ marginTop: '0.5rem' }}>MIT License</p>
+        <p style={{ marginTop: '0.5rem' }}>
+          <a href="https://paypal.me/zorrong" style={{ color: 'var(--accent-primary)', textDecoration: 'none' }} target="_blank" rel="noopener noreferrer">
+            ☕ Buy me a coffee
+          </a>
+          <span style={{ margin: '0 0.5rem' }}>•</span>
+          MIT License
+        </p>
       </footer>
     </div>
   )
