@@ -5,52 +5,52 @@
 > Every time you paste your codebase to ChatGPT or Claude, you're burning tokens. `codeindex` gives AI exactly the context it needs — nothing more.
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat\&logo=typescript\&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat\&logo=nodedotjs\&logoColor=white)
 
----
+***
 
 ## The Problem
 
 You're paying **$20-100/month** on AI coding tools, but here's the dirty secret:
 
-| What You're Doing | What It Costs |
-|---|---|
-| Pasting entire files to ChatGPT | ~50,000 tokens/query |
-| Claude analyzing your codebase | $0.03-0.15/query |
-| Context window overflow errors | Priceless frustration |
+| What You're Doing               | What It Costs         |
+| ------------------------------- | --------------------- |
+| Pasting entire files to ChatGPT | \~50,000 tokens/query |
+| Claude analyzing your codebase  | $0.03-0.15/query      |
+| Context window overflow errors  | Priceless frustration |
 
 **The average developer wastes 80% of their AI budget on irrelevant context.**
 
 Every `CTRL+C → CTRL+V` to an AI chat burns tokens on code that has nothing to do with your question. You're paying for context soup when you only need one ingredient.
 
----
+***
 
 ## The Solution
 
 `codeindex` builds a **hierarchical tree index** of your codebase. When you ask a question, LLM reasoning selects exactly which modules, files, and symbols are relevant — then returns only that.
 
-**Result: ~1,000-3,000 tokens per query instead of 50,000+**
+**Result: \~1,000-3,000 tokens per query instead of 50,000+**
 
 ```
 Before: Paste 200 files (50KB) → Ask "fix my login bug"
 After:  Paste 3 files (2KB)   → Same answer
 ```
 
----
+***
 
 ## Why codeindex?
 
-| | codeindex | Vector Embeddings | Manual Copy-Paste |
-|---|---|---|---|
-| **Tokens/query** | ~2 KB | ~100 KB | 50+ KB |
-| **Setup** | 2 minutes | 30 minutes | 0 |
-| **Accuracy** | LLM reasoning | Cosine similarity | You're guessing |
-| **Updates** | Instant | Re-embed entire codebase | Manual |
-| **Privacy** | 100% local | Data leaves machine | You're in control |
-| **Cost** | Free (MIT) | $20-100/month | Free (wasteful) |
+| <br />           | codeindex     | Vector Embeddings        | Manual Copy-Paste |
+| ---------------- | ------------- | ------------------------ | ----------------- |
+| **Tokens/query** | \~2 KB        | \~100 KB                 | 50+ KB            |
+| **Setup**        | 2 minutes     | 30 minutes               | 0                 |
+| **Accuracy**     | LLM reasoning | Cosine similarity        | You're guessing   |
+| **Updates**      | Instant       | Re-embed entire codebase | Manual            |
+| **Privacy**      | 100% local    | Data leaves machine      | You're in control |
+| **Cost**         | Free (MIT)    | $20-100/month            | Free (wasteful)   |
 
----
+***
 
 ## Features
 
@@ -62,7 +62,7 @@ After:  Paste 3 files (2KB)   → Same answer
 - **Git Hook Ready** — Auto-update index after commits
 - **Production Ready** — API key auth, rate limiting, structured logging
 
----
+***
 
 ## Quick Start
 
@@ -83,7 +83,7 @@ codeindex query "How does the auth module work?"
 
 **That's it.** No cloud signup, no API costs, no vector database to maintain.
 
----
+***
 
 ## How It Works
 
@@ -115,23 +115,24 @@ codeindex query "How does the auth module work?"
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
+***
 
 ## Token Savings
 
-| Project Size | Before | After | You Save |
-|---|---|---|---|
-| 50 files | 15,000 tokens | 800 tokens | **$0.05/query** |
-| 200 files | 60,000 tokens | 1,500 tokens | **$0.15/query** |
-| 500+ files | Context overflow | 2,500 tokens | **Priceless** |
+| Project Size | Before           | After        | You Save        |
+| ------------ | ---------------- | ------------ | --------------- |
+| 50 files     | 15,000 tokens    | 800 tokens   | **$0.05/query** |
+| 200 files    | 60,000 tokens    | 1,500 tokens | **$0.15/query** |
+| 500+ files   | Context overflow | 2,500 tokens | **Priceless**   |
 
 At 10 queries/day, that's **$15-45/month** saved.
 
----
+***
 
 ## IDE Integrations
 
 ### Claude Code
+
 ```bash
 # Add to ~/.claude/tools/codeindex.sh
 curl -s -X POST http://localhost:3131/query \
@@ -139,19 +140,22 @@ curl -s -X POST http://localhost:3131/query \
 ```
 
 ### Cursor / Windsurf
+
 Add to your `.cursorrules`:
+
 ```
 When you need codebase context, run:
   curl -s -X POST http://localhost:3131/query -d '{"query": "YOUR_QUESTION"}' | jq -r '.context'
 ```
 
 ### VSCode (Cline)
+
 ```
 Use codeindex query "your question" to get relevant code context.
 Start server: codeindex serve . --port 3131
 ```
 
----
+***
 
 ## Supported Languages
 
@@ -159,7 +163,7 @@ TypeScript • Python • Go • Rust • Java • C# • C++ • PHP • Swift
 
 *Need another language? The adapter pattern makes it trivial to add new languages.*
 
----
+***
 
 ## Architecture
 
@@ -174,7 +178,7 @@ codeindex/
 
 **No external dependencies.** Everything runs locally.
 
----
+***
 
 ## Contributing
 
@@ -188,8 +192,8 @@ MIT — Use it freely, even in commercial projects.
 
 If codeindex saves you time and money, consider buying me a coffee ☕
 
-[![Donate with PayPal](https://img.shields.io/badge/PayPal-zorrong@outlook.com-003087?style=for-the-badge&logo=paypal)](https://paypal.me/zorrong)
+[![Donate with PayPal](https://img.shields.io/badge/PayPal-zorrong@outlook.com-003087?style=for-the-badge\&logo=paypal)](https://paypal.me/zorrong)
 
----
+***
 
 **Stop paying for context you don't need. Start using codeindex.**

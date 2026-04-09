@@ -22,7 +22,7 @@ Instead of dumping your entire codebase into a prompt (50k+ tokens), `codeindex`
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-org/codeindex.git
+git clone https://github.com/zorrong/codeindex.git
 cd codeindex
 
 # Install dependencies

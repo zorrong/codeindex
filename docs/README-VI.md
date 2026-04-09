@@ -22,7 +22,7 @@ Thay vì đưa toàn bộ codebase vào prompt (50k+ tokens), `codeindex` xây d
 
 ```bash
 # Clone repo
-git clone https://github.com/your-org/codeindex.git
+git clone https://github.com/zorrong/codeindex.git
 cd codeindex
 
 # Cài đặt dependencies

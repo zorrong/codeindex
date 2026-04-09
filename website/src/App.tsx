@@ -163,7 +163,7 @@ function App() {
             <a href="#playground" className="btn-primary">
               Try Demo <ArrowRight size={18} />
             </a>
-            <a href="https://github.com/your-org/codeindex" className="btn-secondary" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/zorrong/codeindex" className="btn-secondary" target="_blank" rel="noopener noreferrer">
               <Github size={18} /> Star on GitHub
             </a>
           </div>
@@ -506,7 +506,7 @@ function App() {
         <h2>Ready to optimize your AI context retrieval?</h2>
         <p>Install codeindex and start building efficient AI-powered code understanding.</p>
         <div className="cta-buttons">
-          <a href="https://github.com/your-org/codeindex#installation" className="btn-primary" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/zorrong/codeindex#installation" className="btn-primary" target="_blank" rel="noopener noreferrer">
             <Rocket size={18} /> Get Started
           </a>
           <a href="/docs/README.md" className="btn-secondary" target="_blank" rel="noopener noreferrer">
