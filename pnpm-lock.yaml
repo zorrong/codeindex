@@ -125,6 +125,30 @@ importers:
 
   packages/cli:
     dependencies:
+      '@codeindex/adapter-cpp':
+        specifier: workspace:*
+        version: link:../adapter-cpp
+      '@codeindex/adapter-csharp':
+        specifier: workspace:*
+        version: link:../adapter-csharp
+      '@codeindex/adapter-go':
+        specifier: workspace:*
+        version: link:../adapter-go
+      '@codeindex/adapter-java':
+        specifier: workspace:*
+        version: link:../adapter-java
+      '@codeindex/adapter-php':
+        specifier: workspace:*
+        version: link:../adapter-php
+      '@codeindex/adapter-python':
+        specifier: workspace:*
+        version: link:../adapter-python
+      '@codeindex/adapter-rust':
+        specifier: workspace:*
+        version: link:../adapter-rust
+      '@codeindex/adapter-swift':
+        specifier: workspace:*
+        version: link:../adapter-swift
       '@codeindex/adapter-typescript':
         specifier: workspace:*
         version: link:../adapter-typescript

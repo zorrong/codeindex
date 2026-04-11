@@ -33,7 +33,7 @@ export function registerUpdateCommand(program: Command): void {
 
       try {
         const llm = createLLMClient({ ...config, apiKey })
-        const manager = createIndexManager(projectRoot, config, llm)
+        const manager = await createIndexManager(projectRoot, config, llm)
         const result = await manager.update()
 
         if (result.upToDate) {

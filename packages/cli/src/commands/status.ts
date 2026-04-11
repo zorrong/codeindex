@@ -24,7 +24,7 @@ export function registerStatusCommand(program: Command): void {
 
       try {
         const llm = createLLMClient(config)
-        const manager = createIndexManager(projectRoot, config, llm)
+        const manager = await createIndexManager(projectRoot, config, llm)
         const status = await manager.status()
 
         if (options["json"] === true) {

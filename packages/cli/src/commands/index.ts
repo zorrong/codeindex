@@ -46,7 +46,11 @@ export function registerIndexCommand(program: Command): void {
 
       try {
         const llm = createLLMClient({ ...config, apiKey })
-        const manager = createIndexManager(projectRoot, config, llm)
+        const manager = await createIndexManager(projectRoot, config, llm)
+        const supportedExts = manager.getSupportedExtensionsList()
+        console.log(`🔌 Adapters: ${supportedExts.join(", ")}`)
+        console.log("")
+
 
         const result = await manager.build()
 

@@ -361,6 +361,13 @@ export class IndexManager {
     return parsed
   }
 
+  /**
+   * Get list of supported extensions for display.
+   */
+  getSupportedExtensionsList(): string[] {
+    return this.getSupportedExtensions()
+  }
+
   private getSupportedExtensions(): string[] {
     return this.options.adapters.flatMap((a) => a.fileExtensions)
   }

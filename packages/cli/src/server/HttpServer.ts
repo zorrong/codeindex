@@ -126,7 +126,7 @@ export class HttpServer {
 
     // GET /status
     if (req.method === "GET" && url.pathname === "/status") {
-      const manager = createIndexManager(this.projectRoot, this.config, this.llmClient)
+      const manager = await createIndexManager(this.projectRoot, this.config, this.llmClient)
       const status = await manager.status()
       this.sendJson(res, 200, status)
       return
@@ -192,7 +192,7 @@ export class HttpServer {
 
     // POST /update
     if (req.method === "POST" && url.pathname === "/update") {
-      const manager = createIndexManager(this.projectRoot, this.config, this.llmClient)
+      const manager = await createIndexManager(this.projectRoot, this.config, this.llmClient)
       const result = await manager.update()
       this.sendJson(res, 200, {
         upToDate: result.upToDate,

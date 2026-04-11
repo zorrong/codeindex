@@ -34,21 +34,18 @@ export function registerInitCommand(program: Command): void {
       let model = currentConfig.model
       let indexDir = currentConfig.indexDir
 
-      if (!options["yes"]) {
+      // Nếu global config đã có đủ thông tin (apiKey + provider), skip hỏi
+      const hasGlobalConfig = currentConfig.apiKey || currentConfig.provider === "ollama"
+      
+      if (!options["yes"] && !hasGlobalConfig) {
         const rl = readline.createInterface({
           input: process.stdin,
           output: process.stdout,
         })
 
         console.log("\n🔧 codeindex project init\n")
-        
-        if (currentConfig.apiKey) {
-          console.log(`💡 Đã tìm thấy API key toàn cục cho ${currentConfig.provider}. Sẽ sử dụng nó làm mặc định.`)
-          console.log(`   (Bạn có thể chạy 'codeindex setup' bất kỳ lúc nào để đổi key toàn cục)\n`)
-        } else if (currentConfig.provider !== "ollama") {
-          console.log(`⚠️  Chưa tìm thấy API key toàn cục. Bạn nên chạy 'codeindex setup' trước.`)
-          console.log(`   Hoặc có thể set biến môi trường: export OPENAI_API_KEY=...\n`)
-        }
+        console.log(`⚠️  Chưa tìm thấy cấu hình toàn cục. Bạn nên chạy 'codeindex setup' trước.`)
+        console.log(`   Hoặc có thể set biến môi trường: export OPENAI_API_KEY=...\n`)
 
         const providerInput = await ask(
           rl,
@@ -71,6 +68,10 @@ export function registerInitCommand(program: Command): void {
         indexDir = indexDirInput.trim() || indexDir
 
         rl.close()
+      } else if (hasGlobalConfig && !options["yes"]) {
+        console.log("\n🔧 codeindex project init\n")
+        console.log(`💡 Sử dụng cấu hình toàn cục: ${currentConfig.provider} / ${currentConfig.model}`)
+        console.log(`   (Chạy 'codeindex setup' để thay đổi cấu hình toàn cục)\n`)
       }
 
       const config: any = {
