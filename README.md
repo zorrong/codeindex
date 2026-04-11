@@ -68,7 +68,7 @@ After:  Paste 3 files (2KB)   → Same answer
 
 ```bash
 # 1. Install
-npm install -g @codeindex/cli
+pnpm install -g @codeindex/cli
 
 # 2. Setup (one-time)
 codeindex setup
@@ -77,7 +77,7 @@ codeindex setup
 cd your-project
 codeindex index .
 
-# 4. Query!
+# 4. Query!cd 
 codeindex query "How does the auth module work?"
 ```
 
@@ -161,7 +161,18 @@ Start server: codeindex serve . --port 3131
 
 TypeScript • Python • Go • Rust • Java • C# • C++ • PHP • Swift
 
-*Need another language? The adapter pattern makes it trivial to add new languages.*
+*Multi-language support is built-in. Each language is handled by its own dedicated adapter.*
+
+***
+
+## Testing
+
+Run all tests across the workspace:
+
+```bash
+pnpm test          # Run all tests
+pnpm test:watch    # Run in watch mode
+```
 
 ***
 

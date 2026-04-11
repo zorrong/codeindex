@@ -21,12 +21,16 @@ pnpm install
 # Build tất cả packages
 pnpm build
 
-# Link CLI globally
-cd packages/cli
-npm link
+# Link CLI toàn cục (dành cho phát triển)
+cd packages/cli && pnpm link --global
+
+# Chạy test toàn bộ dự án
+pnpm test
+pnpm test:watch # Chế độ theo dõi thay đổi
 
 # Cấu hình API Key toàn cục (CHỈ CẦN LÀM 1 LẦN)
 codeindex setup
+
 ```
 
 ---

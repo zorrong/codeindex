@@ -6,7 +6,8 @@
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm --filter @codeindex/cli dev",
-    "test": "pnpm -r test",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "pnpm -r lint",
     "clean": "pnpm -r clean",
     "benchmark": "node benchmarks/run-benchmark.mjs"
