@@ -31,8 +31,8 @@ pnpm install
 # Build all packages
 pnpm -r build
 
-# Link CLI globally
-cd packages/cli && npm link
+# Link CLI globally (for development)
+cd packages/cli && pnpm link --global
 ```
 
 ---

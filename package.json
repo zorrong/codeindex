@@ -5,6 +5,7 @@
   "description": "Vectorless, reasoning-based code index for AI context retrieval",
   "scripts": {
     "build": "pnpm -r build",
+    "dev": "pnpm --filter @codeindex/cli dev",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
     "clean": "pnpm -r clean",

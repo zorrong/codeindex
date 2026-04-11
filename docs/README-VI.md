@@ -31,8 +31,8 @@ pnpm install
 # Build tất cả packages
 pnpm -r build
 
-# Link CLI toàn cục
-cd packages/cli && npm link
+# Link CLI toàn cục (dành cho phát triển)
+cd packages/cli && pnpm link --global
 ```
 
 ---
