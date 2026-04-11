@@ -24,5 +24,26 @@
   },
   "devDependencies": {
     "vitest": "^1.6.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeindex-org/codeindex.git"
+  },
+  "keywords": [
+    "codebase",
+    "index",
+    "ai-context",
+    "retrieval",
+    "llm",
+    "rag"
+  ],
+  "author": "CodeIndex Team",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
 }
