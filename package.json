@@ -10,7 +10,10 @@
     "test:watch": "vitest",
     "lint": "pnpm -r lint",
     "clean": "pnpm -r clean",
-    "benchmark": "node benchmarks/run-benchmark.mjs"
+    "benchmark": "node benchmarks/run-benchmark.mjs",
+    "release:check": "node scripts/release-check.mjs",
+    "release:publish:dry-run": "node scripts/release-publish.mjs --dry-run",
+    "release:publish": "node scripts/release-publish.mjs"
   },
   "devDependencies": {
     "typescript": "^5.4.0",
