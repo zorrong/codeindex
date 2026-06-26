@@ -1,5 +1,5 @@
 /**
- * `codeindex query "<text>"` — query index, trả về relevant code context.
+ * `codei query "<text>"` — query index, trả về relevant code context.
  */
 
 import type { Command } from "commander"
@@ -17,11 +17,13 @@ export function registerQueryCommand(program: Command): void {
     .option("--no-deps", "Không expand dependencies")
     .option("--format <fmt>", "Output format: text | json", "text")
     .option("--max-symbols <n>", "Max symbols to include", "10")
+    .option("--summary-mode <mode>", "Summary mode: heuristic | llm | auto")
     .option("-v, --verbose", "Show traversal path")
     .action(async (queryText: string, options: Record<string, string | boolean>) => {
       const projectRoot = path.resolve(options["cwd"] as string ?? ".")
       const config = loadConfig(projectRoot, {
         verbose: options["verbose"] === true,
+        ...(options["summaryMode"] !== undefined && { summaryMode: options["summaryMode"] as any }),
       })
 
       // Load index
@@ -31,7 +33,7 @@ export function registerQueryCommand(program: Command): void {
       if (!tree) {
         console.error(
           `❌ No index found at ${projectRoot}/${config.indexDir}/\n` +
-          `   Run: codeindex index ${projectRoot}`
+          `   Run: codei index ${projectRoot}`
         )
         process.exit(1)
       }
@@ -76,10 +78,10 @@ export function registerQueryCommand(program: Command): void {
           // Text format — raw context sẵn sàng paste vào AI
           if (options["verbose"] === true) {
             const peek = cache.peek(queryText)
-            console.error(`[codeindex] Query: "${queryText}"`)
-            console.error(`[codeindex] Traversal: ${result.traversalPath.join(" → ")}`)
-            console.error(`[codeindex] Tokens: ~${result.estimatedTokens}`)
-            console.error(`[codeindex] Cache: ${peek ? peek.kind : "miss"}`)
+            console.error(`[codei] Query: "${queryText}"`)
+            console.error(`[codei] Traversal: ${result.traversalPath.join(" → ")}`)
+            console.error(`[codei] Tokens: ~${result.estimatedTokens}`)
+            console.error(`[codei] Cache: ${peek ? peek.kind : "miss"}`)
             console.error("---")
           }
 

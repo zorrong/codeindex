@@ -41,7 +41,7 @@ export function registerDoctorCommand(program: Command): void {
         return
       }
 
-      console.log(`🩺 codeindex doctor: ${debug.projectRoot}`)
+      console.log(`🩺 codei doctor: ${debug.projectRoot}`)
       console.log(`   Global dir : ${debug.globalConfigDir}`)
       console.log("")
 
@@ -52,6 +52,7 @@ export function registerDoctorCommand(program: Command): void {
         "baseURL",
         "indexDir",
         "projectName",
+        "summaryMode",
         "verbose",
         "serverApiKey",
         "serverCorsOrigin",

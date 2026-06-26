@@ -1,5 +1,5 @@
 /**
- * `codeindex update` — incremental update sau git commit.
+ * `codei update` — incremental update sau git commit.
  */
 
 import type { Command } from "commander"
@@ -12,12 +12,14 @@ export function registerUpdateCommand(program: Command): void {
     .command("update [path]")
     .description("Incremental update index cho files đã thay đổi")
     .option("--index-dir <dir>", "Index directory")
+    .option("--summary-mode <mode>", "Summary mode: heuristic | llm | auto")
     .option("-v, --verbose", "Verbose output")
     .action(async (targetPath: string | undefined, options: Record<string, string | boolean>) => {
       const projectRoot = path.resolve(targetPath ?? ".")
 
       const overrides: Partial<CodeIndexConfig> = {}
       if (options["indexDir"]) overrides.indexDir = options["indexDir"] as string
+      if (options["summaryMode"]) overrides.summaryMode = options["summaryMode"] as any
       if (options["verbose"]) overrides.verbose = options["verbose"] as boolean
 
       const config = loadConfig(projectRoot, overrides)

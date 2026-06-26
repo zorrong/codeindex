@@ -2,7 +2,7 @@
 
 **Vectorless, reasoning-based code index for AI context retrieval.**
 
-> Cut your AI coding costs by 95%. `codeindex` gives AI exactly the context it needs — nothing more.
+> Cut your AI coding costs by 95%. `codei` gives AI exactly the context it needs — nothing more.
 
 ## Quick Start
 
@@ -11,27 +11,27 @@
 npm install -g @codeindex/cli
 
 # Setup once globally
-codeindex setup
+codei setup
 
 # Index your project
 cd your-project
-codeindex index .
+codei index .
 
 # Query!
-codeindex query "How does authentication work?"
+codei query "How does authentication work?"
 ```
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `codeindex setup` | Global runtime configuration (recommended) |
-| `codeindex init [path]` | Initialize project |
-| `codeindex index [path]` | Build/rebuild index |
-| `codeindex query "<text>"` | Query the index |
-| `codeindex update [path]` | Incremental update |
-| `codeindex status [path]` | Check index health |
-| `codeindex serve [path]` | HTTP server for IDE integration |
+| `codei setup` | Global runtime configuration (recommended) |
+| `codei init [path]` | Initialize project |
+| `codei index [path]` | Build/rebuild index |
+| `codei query "<text>"` | Query the index |
+| `codei update [path]` | Incremental update |
+| `codei status [path]` | Check index health |
+| `codei serve [path]` | HTTP server for IDE integration |
 
 ## Global Config
 
@@ -42,7 +42,7 @@ CODEINDEX_MODEL=minimaxai/minimax-m3
 CODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1
 ```
 
-`codeindex setup` writes global config to `~/.codeindex/config.json` and `~/.codeindex/.env`, so in most cases you only need to configure it once.
+`codei setup` writes global config to `~/.codei/config.json` and `~/.codei/.env`, so in most cases you only need to configure it once.
 
 ## Features
 

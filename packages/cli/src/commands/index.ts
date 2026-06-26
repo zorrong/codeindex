@@ -1,5 +1,5 @@
 /**
- * `codeindex index <path>` — build full index từ đầu.
+ * `codei index <path>` — build full index từ đầu.
  */
 
 import type { Command } from "commander"

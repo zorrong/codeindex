@@ -28,20 +28,20 @@ const mockLlm: LLMClient = {
 describe("loadConfig", () => {
   let tmpDir: string
   let globalDir: string
-  const originalGlobalDir = process.env["CODEINDEX_GLOBAL_DIR"]
+  const originalGlobalDir = process.env["CODEI_GLOBAL_DIR"]
 
   beforeAll(async () => {
     tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "config-test-"))
     globalDir = path.join(tmpDir, ".global")
     await fs.mkdir(globalDir, { recursive: true })
-    process.env["CODEINDEX_GLOBAL_DIR"] = globalDir
+    process.env["CODEI_GLOBAL_DIR"] = globalDir
   })
 
   afterAll(async () => {
     if (originalGlobalDir === undefined) {
-      delete process.env["CODEINDEX_GLOBAL_DIR"]
+      delete process.env["CODEI_GLOBAL_DIR"]
     } else {
-      process.env["CODEINDEX_GLOBAL_DIR"] = originalGlobalDir
+      process.env["CODEI_GLOBAL_DIR"] = originalGlobalDir
     }
     await fs.rm(tmpDir, { recursive: true, force: true })
   })
@@ -53,9 +53,9 @@ describe("loadConfig", () => {
     expect(config.verbose).toBe(false)
   })
 
-  it("should use only local project settings from .codeindex.json", async () => {
+  it("should use only local project settings from .codei.json", async () => {
     await fs.writeFile(
-      path.join(tmpDir, ".codeindex.json"),
+      path.join(tmpDir, ".codei.json"),
       JSON.stringify({ provider: "anthropic", model: "claude-opus-4-5", indexDir: ".myindex" })
     )
     const config = loadConfig(tmpDir)
@@ -63,19 +63,19 @@ describe("loadConfig", () => {
     expect(config.model).toBe("gpt-4o")
     expect(config.indexDir).toBe(".myindex")
 
-    await fs.unlink(path.join(tmpDir, ".codeindex.json"))
+    await fs.unlink(path.join(tmpDir, ".codei.json"))
   })
 
   it("should apply CLI overrides over file config", async () => {
     await fs.writeFile(
-      path.join(tmpDir, ".codeindex.json"),
+      path.join(tmpDir, ".codei.json"),
       JSON.stringify({ provider: "openai", model: "gpt-4o" })
     )
     const config = loadConfig(tmpDir, { model: "gpt-4o-mini", verbose: true })
     expect(config.model).toBe("gpt-4o-mini")
     expect(config.verbose).toBe(true)
 
-    await fs.unlink(path.join(tmpDir, ".codeindex.json"))
+    await fs.unlink(path.join(tmpDir, ".codei.json"))
   })
 
   it("should read provider and API key from global .env", async () => {
@@ -140,13 +140,13 @@ describe("loadConfig", () => {
     await fs.unlink(path.join(globalDir, "config.json"))
   })
 
-  it("should keep global runtime config even if project .codeindex.json contains provider/model", async () => {
+  it("should keep global runtime config even if project .codei.json contains provider/model", async () => {
     await fs.writeFile(
       path.join(globalDir, ".env"),
       "CODEINDEX_PROVIDER=nvidia\nCODEINDEX_API_KEY=test-global-key-2\nCODEINDEX_MODEL=minimaxai/minimax-m3\n"
     )
     await fs.writeFile(
-      path.join(tmpDir, ".codeindex.json"),
+      path.join(tmpDir, ".codei.json"),
       JSON.stringify({ provider: "openai", model: "codeindex", indexDir: ".myindex-2" })
     )
 
@@ -157,7 +157,7 @@ describe("loadConfig", () => {
     expect(resolveApiKey(config)).toBe("test-global-key-2")
 
     await fs.unlink(path.join(globalDir, ".env"))
-    await fs.unlink(path.join(tmpDir, ".codeindex.json"))
+    await fs.unlink(path.join(tmpDir, ".codei.json"))
   })
 
   it("should explain config sources for global env and project config", async () => {
@@ -166,7 +166,7 @@ describe("loadConfig", () => {
       "CODEINDEX_PROVIDER=nvidia\nCODEINDEX_API_KEY=test-global-key-3\nCODEINDEX_MODEL=minimaxai/minimax-m3\n"
     )
     await fs.writeFile(
-      path.join(tmpDir, ".codeindex.json"),
+      path.join(tmpDir, ".codei.json"),
       JSON.stringify({ indexDir: ".doctor-index", model: "ignored-model" })
     )
 
@@ -178,7 +178,7 @@ describe("loadConfig", () => {
     expect(debug.fields.indexDir?.source).toBe("project-config")
 
     await fs.unlink(path.join(globalDir, ".env"))
-    await fs.unlink(path.join(tmpDir, ".codeindex.json"))
+    await fs.unlink(path.join(tmpDir, ".codei.json"))
   })
 
   it("should read API key from env", () => {

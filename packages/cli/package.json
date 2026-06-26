@@ -1,10 +1,10 @@
 {
   "name": "@codeindex/cli",
   "version": "0.1.0",
-  "description": "CLI interface — codeindex index / query / update",
+  "description": "CLI interface — codei index / query / update",
   "type": "module",
   "bin": {
-    "codeindex": "./dist/cli.js"
+    "codei": "./dist/cli.js"
   },
   "main": "./dist/cli.js",
   "scripts": {

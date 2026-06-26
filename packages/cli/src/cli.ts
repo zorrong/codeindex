@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * codeindex CLI — entry point
+ * codei CLI — entry point
  *
  * Commands:
- *   codeindex index [path]    — build full index
- *   codeindex query "<text>"  — query index, get context
- *   codeindex update [path]   — incremental update
- *   codeindex status [path]   — show index health
- *   codeindex serve [path]    — HTTP server for IDE integration
+ *   codei index [path]    — build full index
+ *   codei query "<text>"  — query index, get context
+ *   codei update [path]   — incremental update
+ *   codei status [path]   — show index health
+ *   codei serve [path]    — HTTP server for IDE integration
  */
 
 import "dotenv/config"
@@ -24,7 +24,7 @@ import { registerDoctorCommand } from "./commands/doctor.js"
 const program = new Command()
 
 program
-  .name("codeindex")
+  .name("codei")
   .description(
     "Vectorless, reasoning-based code index for AI context retrieval.\n" +
     "Reduces token usage from 50k+ to ~1-3k per query."

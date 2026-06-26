@@ -6,27 +6,27 @@
 #   cp packages/cli/src/hooks/post-commit.sh .git/hooks/post-commit
 #   chmod +x .git/hooks/post-commit
 
-CODEINDEX_BIN="./node_modules/.bin/codeindex"
+CODEI_BIN="./node_modules/.bin/codei"
 
-# Check codeindex có được install không
-if [ ! -f "$CODEINDEX_BIN" ]; then
-  echo "[codeindex] Skipping update — codeindex not found at $CODEINDEX_BIN"
+# Check codei có được install không
+if [ ! -f "$CODEI_BIN" ]; then
+  echo "[codei] Skipping update — codei not found at $CODEI_BIN"
   exit 0
 fi
 
 # Check index có tồn tại không (chưa init thì không update)
 if [ ! -d ".index" ]; then
-  echo "[codeindex] Skipping update — run 'codeindex index .' first to initialize"
+  echo "[codei] Skipping update — run 'codei index .' first to initialize"
   exit 0
 fi
 
-echo "[codeindex] Running incremental update..."
-$CODEINDEX_BIN update
+echo "[codei] Running incremental update..."
+$CODEI_BIN update
 
 if [ $? -eq 0 ]; then
-  echo "[codeindex] Index updated successfully"
+  echo "[codei] Index updated successfully"
 else
-  echo "[codeindex] Update failed — index may be stale, run 'codeindex update' manually"
+  echo "[codei] Update failed — index may be stale, run 'codei update' manually"
 fi
 
 # Hook luôn exit 0 để không block commit

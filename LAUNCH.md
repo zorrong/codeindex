@@ -77,14 +77,14 @@ After:  Paste 3 files (2KB)   → Cùng câu trả lời
 npm install -g @codeindex/cli
 
 # 2. Setup (một lần)
-codeindex setup
+codei setup
 
 # 3. Index dự án
 cd your-project
-codeindex index .
+codei index .
 
 # 4. Query!
-codeindex query "Authentication hoạt động thế nào?"
+codei query "Authentication hoạt động thế nào?"
 ```
 
 **Không cần cloud signup, không API costs, không vector database.**

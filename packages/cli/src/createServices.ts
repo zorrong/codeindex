@@ -35,7 +35,7 @@ async function loadAllAdapters(verbose = false): Promise<LanguageAdapter[]> {
       // Ở chế độ verbose, log rõ để user biết language support nào đang thiếu.
       if (verbose) {
         const message = error instanceof Error ? error.message : String(error)
-        console.warn(`[codeindex] Optional adapter "${name}" not loaded: ${message}`)
+        console.warn(`[codei] Optional adapter "${name}" not loaded: ${message}`)
       }
     }
   }

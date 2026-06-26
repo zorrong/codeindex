@@ -15,7 +15,7 @@ describe("regex adapter smoke tests", () => {
   let tmpDir: string
 
   beforeAll(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "codeindex-adapter-smoke-"))
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "codei-adapter-smoke-"))
   })
 
   afterAll(async () => {

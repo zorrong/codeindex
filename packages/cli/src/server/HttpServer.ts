@@ -61,7 +61,7 @@ export class HttpServer {
 
         res.setHeader("Access-Control-Allow-Origin", this.corsOrigin)
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Codeindex-Api-Key")
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Codei-Api-Key")
         res.setHeader("X-Request-Id", requestId)
 
         if (req.method === "OPTIONS") {
@@ -160,7 +160,7 @@ export class HttpServer {
 
       if (!tree) {
         this.sendJson(res, 404, {
-          error: "No index found. Run: codeindex index <path>",
+          error: "No index found. Run: codei index <path>",
           code: "NO_INDEX",
           requestId,
         })
@@ -257,7 +257,7 @@ export class HttpServer {
 
   private checkAuth(req: http.IncomingMessage): boolean {
     if (!this.serverApiKey) return true
-    const headerKey = (req.headers["x-codeindex-api-key"] as string | undefined) ?? ""
+    const headerKey = (req.headers["x-codei-api-key"] as string | undefined) ?? ""
     if (headerKey && headerKey === this.serverApiKey) return true
     const auth = (req.headers["authorization"] as string | undefined) ?? ""
     if (auth.startsWith("Bearer ") && auth.slice("Bearer ".length) === this.serverApiKey) return true

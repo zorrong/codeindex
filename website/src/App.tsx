@@ -48,7 +48,7 @@ function App() {
       const data = await res.json()
       setResponse({ context: data.context, tokens: data.estimatedTokens })
     } catch {
-      setError('Make sure codeindex server is running: codeindex serve . --port 3131')
+      setError('Make sure codei server is running: codei serve . --port 3131')
     } finally {
       setLoading(false)
     }
@@ -63,11 +63,11 @@ function App() {
   const faqs = [
     {
       q: "How is this different from GitHub Copilot or Cursor?",
-      a: "Copilot and Cursor provide code completions. codeindex helps AI assistants understand your entire codebase context for better responses. It's complementary — use codeindex to give Claude/ChatGPT full project context.",
+      a: "Copilot and Cursor provide code completions. codei helps AI assistants understand your entire codebase context for better responses. It's complementary — use codei to give Claude/ChatGPT full project context.",
     },
     {
       q: "How is this different from vector embedding approaches (Pinecone, Chroma)?",
-      a: "Vector embeddings use cosine similarity for search. codeindex uses LLM reasoning to traverse a hierarchical index. This means: deterministic results, no embedding drift, and ~100x less storage.",
+      a: "Vector embeddings use cosine similarity for search. codei uses LLM reasoning to traverse a hierarchical index. This means: deterministic results, no embedding drift, and ~100x less storage.",
     },
     {
       q: "Is my code stored externally?",
@@ -75,7 +75,7 @@ function App() {
     },
     {
       q: "How often should I update the index?",
-      a: "Run 'codeindex update' after significant changes, or use the git hook to auto-update after commits. For active development, weekly updates are usually sufficient.",
+      a: "Run 'codei update' after significant changes, or use the git hook to auto-update after commits. For active development, weekly updates are usually sufficient.",
     },
     {
       q: "Which languages are supported?",
@@ -91,7 +91,7 @@ function App() {
     {
       icon: <MessageSquare size={24} />,
       title: "AI Coding Assistants",
-      description: "Give Claude, ChatGPT, or any LLM full project context. Instead of pasting files manually, let codeindex retrieve exactly what's relevant.",
+      description: "Give Claude, ChatGPT, or any LLM full project context. Instead of pasting files manually, let codei retrieve exactly what's relevant.",
     },
     {
       icon: <GitPullRequest size={24} />,
@@ -130,7 +130,7 @@ function App() {
             <circle cx="50" cy="50" r="12" fill="#4ade80"/>
             <path d="M50 38 L50 20 M50 62 L50 80 M38 50 L25 50 M62 50 L75 50" stroke="#4ade80" strokeWidth="2"/>
           </svg>
-          codeindex
+          codei
         </a>
         <ul className="nav-links">
           <li><a href="#how-it-works">How It Works</a></li>
@@ -198,7 +198,7 @@ function App() {
             <h3>Index</h3>
             <p>Build a hierarchical tree index of your codebase. Extract symbols, dependencies, and summaries.</p>
             <div className="step-code">
-              <Terminal size={14} /> <code>codeindex index .</code>
+              <Terminal size={14} /> <code>codei index .</code>
             </div>
           </div>
           <div className="step-arrow"><ArrowRight size={24} /></div>
@@ -208,7 +208,7 @@ function App() {
             <h3>Query</h3>
             <p>Ask questions in natural language. LLM reasoning traverses the tree to find relevant context.</p>
             <div className="step-code">
-              <Terminal size={14} /> <code>codeindex query "..."</code>
+              <Terminal size={14} /> <code>codei query "..."</code>
             </div>
           </div>
           <div className="step-arrow"><ArrowRight size={24} /></div>
@@ -242,9 +242,9 @@ function App() {
 
       <section className="features" id="features">
         <div style={{ textAlign: 'center' }}>
-          <h2>Why codeindex?</h2>
+          <h2>Why codei?</h2>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>
-            Unlike vector embedding approaches, codeindex uses LLM reasoning to traverse a hierarchical tree index.
+            Unlike vector embedding approaches, codei uses LLM reasoning to traverse a hierarchical tree index.
           </p>
         </div>
         <div className="features-grid">
@@ -303,14 +303,14 @@ function App() {
         <div style={{ textAlign: 'center' }}>
           <h2>vs Vector Embeddings</h2>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>
-            How does codeindex compare to traditional vector-based approaches?
+            How does codei compare to traditional vector-based approaches?
           </p>
         </div>
         <div className="comparison-table">
           <div className="comparison-header">
             <div className="comparison-col">Feature</div>
             <div className="comparison-col codeindex-col">
-              <span className="codeindex-badge">codeindex</span>
+              <span className="codeindex-badge">codei</span>
             </div>
             <div className="comparison-col">Vector Embeddings</div>
           </div>
@@ -355,7 +355,7 @@ function App() {
               <h3>Setup API Key</h3>
               <div className="install-code">
                 <Terminal size={16} />
-                <code>codeindex setup</code>
+                <code>codei setup</code>
               </div>
             </div>
           </div>
@@ -365,7 +365,7 @@ function App() {
               <h3>Index Your Project</h3>
               <div className="install-code">
                 <Terminal size={16} />
-                <code>codeindex index .</code>
+                <code>codei index .</code>
               </div>
             </div>
           </div>
@@ -375,7 +375,7 @@ function App() {
               <h3>Query</h3>
               <div className="install-code">
                 <Terminal size={16} />
-                <code>codeindex query "How does auth work?"</code>
+                <code>codei query "How does auth work?"</code>
               </div>
             </div>
           </div>
@@ -387,7 +387,7 @@ function App() {
           <h2>Live Demo</h2>
           <p className="playground-subtitle">
             Query your codebase with natural language. Start the server with{' '}
-            <code style={{ color: 'var(--accent-primary)' }}>codeindex serve . --port 3131</code>
+            <code style={{ color: 'var(--accent-primary)' }}>codei serve . --port 3131</code>
           </p>
           <div className="playground-ui">
             <div className="query-input-container">
@@ -458,7 +458,7 @@ function App() {
         <div style={{ textAlign: 'center' }}>
           <h2>FAQ</h2>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>
-            Frequently asked questions about codeindex
+            Frequently asked questions about codei
           </p>
         </div>
         <div className="faq-list">
@@ -482,7 +482,7 @@ function App() {
         <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
           <h2>Support This Project</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
-            If codeindex saves you time and money, consider buying me a coffee ☕
+            If codei saves you time and money, consider buying me a coffee ☕
             Every contribution helps keep this project alive and developing new features.
           </p>
           <a
@@ -504,7 +504,7 @@ function App() {
 
       <section className="cta">
         <h2>Ready to optimize your AI context retrieval?</h2>
-        <p>Install codeindex and start building efficient AI-powered code understanding.</p>
+        <p>Install codei and start building efficient AI-powered code understanding.</p>
         <div className="cta-buttons">
           <a href="https://github.com/zorrong/codeindex#installation" className="btn-primary" target="_blank" rel="noopener noreferrer">
             <Rocket size={18} /> Get Started
@@ -516,7 +516,7 @@ function App() {
       </section>
 
       <footer className="footer">
-        <p>codeindex — Vectorless, reasoning-based code index for AI context retrieval.</p>
+        <p>codei — Vectorless, reasoning-based code index for AI context retrieval.</p>
         <p style={{ marginTop: '0.5rem' }}>
           <a href="https://paypal.me/zorrong" style={{ color: 'var(--accent-primary)', textDecoration: 'none' }} target="_blank" rel="noopener noreferrer">
             ☕ Buy me a coffee

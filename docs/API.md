@@ -5,7 +5,7 @@
 Start the server:
 
 ```bash
-codeindex serve [path] [options]
+codei serve [path] [options]
 ```
 
 ### Options
@@ -21,7 +21,7 @@ codeindex serve [path] [options]
 ### Example
 
 ```bash
-codeindex serve . --port 3131 --host 0.0.0.0 --api-key my-secret-key
+codei serve . --port 3131 --host 0.0.0.0 --api-key my-secret-key
 ```
 
 ---
@@ -70,7 +70,7 @@ Query the index for relevant context.
 ```bash
 curl -X POST http://localhost:3131/query \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: your-api-key" \
+  -H "X-Codei-Api-Key: your-api-key" \
   -d '{"query": "How does authentication work?"}'
 ```
 
@@ -108,7 +108,7 @@ Trigger an incremental index update.
 
 ```bash
 curl -X POST http://localhost:3131/update \
-  -H "X-API-Key: your-api-key"
+  -H "X-Codei-Api-Key: your-api-key"
 ```
 
 ---
@@ -151,7 +151,7 @@ Server health check.
 
 ## Configuration File
 
-### `.codeindex.json`
+### `.codei.json`
 
 Project-level configuration. Recommended: keep this file minimal and put API/provider settings in the project's `.env`.
 
@@ -167,7 +167,7 @@ Project-level configuration. Recommended: keep this file minimal and put API/pro
 }
 ```
 
-`summaryMode` controls how `codeindex` generates file/module summaries:
+`summaryMode` controls how `codei` generates file/module summaries:
 
 | Mode | Behavior | LLM calls during index |
 |------|----------|------------------------|
@@ -176,6 +176,23 @@ Project-level configuration. Recommended: keep this file minimal and put API/pro
 | `auto` | Heuristic-first, may use LLM in future versions | Low |
 
 Recommended default: `heuristic` (stable and avoids provider rate limits).
+
+### CLI Overrides
+
+You can override `summaryMode` per command:
+
+```bash
+codei index . --summary-mode heuristic
+codei query "your question" --summary-mode heuristic
+codei serve . --summary-mode heuristic
+```
+
+You can also inspect and manage caches:
+
+```bash
+codei status . --json
+codei status . --clear-cache
+```
 
 ### `.env`
 
@@ -189,11 +206,11 @@ CODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1
 # CODEINDEX_MODEL=minimaxai/minimax-m3
 ```
 
-If `NVIDIA_API_KEY` or the NVIDIA base URL is present, `codeindex` can infer the NVIDIA provider automatically.
+If `NVIDIA_API_KEY` or the NVIDIA base URL is present, `codei` can infer the NVIDIA provider automatically.
 
-### `~/.codeindex/.env`
+### `~/.codei/.env`
 
-Recommended global runtime configuration when you want to run `codeindex setup` once and reuse it across all projects.
+Recommended global runtime configuration when you want to run `codei setup` once and reuse it across all projects.
 
 ```env
 CODEINDEX_PROVIDER=nvidia
@@ -202,9 +219,9 @@ CODEINDEX_MODEL=minimaxai/minimax-m3
 CODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1
 ```
 
-### `~/.codeindex/config.json`
+### `~/.codei/config.json`
 
-Backward-compatible global configuration (also created by `codeindex setup`).
+Backward-compatible global configuration (also created by `codei setup`).
 
 ```json
 {
@@ -232,7 +249,7 @@ Backward-compatible global configuration (also created by `codeindex setup`).
 
 ## Index Output Files
 
-When indexing, `codeindex` writes:
+When indexing, `codei` writes:
 
 | Path | Description |
 |------|-------------|
@@ -291,28 +308,28 @@ const result = await traversal.traverse("How does auth work?")
 
 ## CLI Reference
 
-### `codeindex setup`
+### `codei setup`
 
 Interactive optional global configuration.
 
 ```bash
-codeindex setup
+codei setup
 ```
 
-### `codeindex init`
+### `codei init`
 
 Initialize project in current directory.
 
 ```bash
-codeindex init [path]
+codei init [path]
 ```
 
-### `codeindex index`
+### `codei index`
 
 Build or rebuild index.
 
 ```bash
-codeindex index [path] [options]
+codei index [path] [options]
 ```
 
 | Option | Description |
@@ -320,12 +337,12 @@ codeindex index [path] [options]
 | `--verbose, -v` | Verbose output |
 | `--force` | Force rebuild |
 
-### `codeindex query`
+### `codei query`
 
 Query the index.
 
 ```bash
-codeindex query "<text>" [options]
+codei query "<text>" [options]
 ```
 
 | Option | Description |
@@ -335,32 +352,32 @@ codeindex query "<text>" [options]
 | `--max-tokens` | Max tokens |
 | `--verbose` | Show traversal path |
 
-### `codeindex update`
+### `codei update`
 
 Incremental update.
 
 ```bash
-codeindex update [path] [options]
+codei update [path] [options]
 ```
 
 | Option | Description |
 |--------|-------------|
 | `--force` | Force full rebuild |
 
-### `codeindex status`
+### `codei status`
 
 Check index health.
 
 ```bash
-codeindex status [path]
+codei status [path]
 ```
 
-### `codeindex serve`
+### `codei serve`
 
 Start HTTP server.
 
 ```bash
-codeindex serve [path] [options]
+codei serve [path] [options]
 ```
 
 | Option | Default | Description |

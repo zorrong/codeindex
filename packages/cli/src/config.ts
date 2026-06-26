@@ -1,8 +1,8 @@
 /**
  * Config loader — global-first:
- * 1. ~/.codeindex/config.json
- * 2. ~/.codeindex/.env
- * 3. project .codeindex.json (local-only fields)
+ * 1. ~/.codei/config.json
+ * 2. ~/.codei/.env
+ * 3. project .codei.json (local-only fields)
  * 4. project .env
  * 5. process.env
  * 6. CLI flags
@@ -52,9 +52,11 @@ export interface ConfigDebugInfo {
   fields: Partial<Record<keyof CodeIndexConfig, ConfigFieldSource>>
 }
 
-const CONFIG_FILE = ".codeindex.json"
+const CONFIG_FILE = ".codei.json"
+const LEGACY_CONFIG_FILE = ".codeindex.json"
 const DOTENV_FILE = ".env"
-const DEFAULT_GLOBAL_CONFIG_DIR = path.join(os.homedir(), ".codeindex")
+const DEFAULT_GLOBAL_CONFIG_DIR = path.join(os.homedir(), ".codei")
+const LEGACY_GLOBAL_CONFIG_DIR = path.join(os.homedir(), ".codeindex")
 const PROJECT_LOCAL_CONFIG_KEYS: Array<keyof CodeIndexConfig> = [
   "indexDir",
   "projectName",
@@ -94,7 +96,22 @@ function mergeExisting(target: any, source: any) {
 }
 
 function getGlobalConfigDir(): string {
-  return process.env["CODEINDEX_GLOBAL_DIR"]?.trim() || DEFAULT_GLOBAL_CONFIG_DIR
+  const explicit =
+    process.env["CODEI_GLOBAL_DIR"]?.trim() ||
+    process.env["CODEINDEX_GLOBAL_DIR"]?.trim()
+
+  if (explicit) return explicit
+
+  if (fs.existsSync(DEFAULT_GLOBAL_CONFIG_DIR)) return DEFAULT_GLOBAL_CONFIG_DIR
+
+  if (fs.existsSync(LEGACY_GLOBAL_CONFIG_DIR)) {
+    try {
+      fs.renameSync(LEGACY_GLOBAL_CONFIG_DIR, DEFAULT_GLOBAL_CONFIG_DIR)
+    } catch {}
+    return DEFAULT_GLOBAL_CONFIG_DIR
+  }
+
+  return DEFAULT_GLOBAL_CONFIG_DIR
 }
 
 function getGlobalConfigFile(): string {
@@ -103,6 +120,16 @@ function getGlobalConfigFile(): string {
 
 function getGlobalEnvFile(): string {
   return path.join(getGlobalConfigDir(), DOTENV_FILE)
+}
+
+function migrateProjectConfigFile(projectRoot: string): void {
+  const newPath = path.join(projectRoot, CONFIG_FILE)
+  const legacyPath = path.join(projectRoot, LEGACY_CONFIG_FILE)
+  if (!fs.existsSync(newPath) && fs.existsSync(legacyPath)) {
+    try {
+      fs.renameSync(legacyPath, newPath)
+    } catch {}
+  }
 }
 
 function stripKeys<T extends Record<string, unknown>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
@@ -286,6 +313,8 @@ export function loadConfig(
   projectRoot: string,
   overrides: Partial<CodeIndexConfig> = {}
 ): CodeIndexConfig {
+  migrateProjectConfigFile(projectRoot)
+
   // Base defaults
   const merged: CodeIndexConfig = {
     provider: "openai",
@@ -299,7 +328,7 @@ export function loadConfig(
   const globalConfig = readGlobalConfigFile()
   let globalEnv = loadGlobalEnv()
 
-  // Tự migrate config toàn cục cũ sang ~/.codeindex/.env để lần sau dùng ổn định.
+  // Tự migrate config toàn cục cũ sang ~/.codei/.env để lần sau dùng ổn định.
   if (Object.keys(globalEnv).length === 0 && Object.keys(globalConfig).length > 0) {
     const legacyRuntimeConfig = Object.fromEntries(
       Object.entries(globalConfig).filter(([key]) => GLOBAL_RUNTIME_KEYS.includes(key as keyof CodeIndexConfig))
@@ -311,17 +340,17 @@ export function loadConfig(
     }
   }
 
-  // 1. Load từ global config (~/.codeindex/config.json), nhưng nếu đã có ~/.codeindex/.env
+  // 1. Load từ global config (~/.codei/config.json), nhưng nếu đã có ~/.codei/.env
   // thì bỏ qua runtime keys cũ để .env làm source of truth.
   const effectiveGlobalConfig = Object.keys(globalEnv).length > 0
     ? stripKeys(globalConfig, GLOBAL_RUNTIME_KEYS)
     : globalConfig
   mergeExisting(merged, effectiveGlobalConfig)
 
-  // 2. Load từ global .env (~/.codeindex/.env)
+  // 2. Load từ global .env (~/.codei/.env)
   applyEnvConfig(merged, globalEnv)
 
-  // 3. Load từ .codeindex.json nếu có (local-only keys)
+  // 3. Load từ .codei.json nếu có (local-only keys)
   const configFile = path.join(projectRoot, CONFIG_FILE)
   if (fs.existsSync(configFile)) {
     try {
@@ -335,7 +364,7 @@ export function loadConfig(
 
       mergeExisting(merged, localConfig)
     } catch {
-      console.warn(`[codeindex] Warning: could not parse ${CONFIG_FILE}`)
+      console.warn(`[codei] Warning: could not parse ${CONFIG_FILE}`)
     }
   }
 
@@ -360,6 +389,8 @@ export function inspectConfig(
   projectRoot: string,
   overrides: Partial<CodeIndexConfig> = {}
 ): ConfigDebugInfo {
+  migrateProjectConfigFile(projectRoot)
+
   const globalConfig = readGlobalConfigFile()
   let globalEnv = loadGlobalEnv()
   if (Object.keys(globalEnv).length === 0 && Object.keys(globalConfig).length > 0) {
@@ -510,7 +541,7 @@ export function saveGlobalEnv(config: Partial<CodeIndexConfig>): void {
   }
 
   const lines = [
-    "# codeindex global runtime config",
+    "# codei global runtime config",
   ]
 
   if (config.provider) lines.push(`CODEINDEX_PROVIDER=${formatEnvValue(config.provider)}`)
@@ -547,6 +578,6 @@ export function resolveApiKey(config: CodeIndexConfig): string {
   throw new Error(
     `No API key found for provider "${config.provider}". ` +
     `Set ${envMap[config.provider] ?? "OPENAI_API_KEY"} environment variable ` +
-    `or add "apiKey" to .codeindex.json`
+    `or add "apiKey" to ${CONFIG_FILE}`
   )
 }

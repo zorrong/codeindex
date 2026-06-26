@@ -9,14 +9,14 @@ function ask(rl: readline.Interface, question: string): Promise<string> {
 export function registerSetupCommand(program: Command): void {
   program
     .command("setup")
-    .description("Cài đặt cấu hình toàn cục (API key, Provider, Model) cho codeindex")
+    .description("Cài đặt cấu hình toàn cục (API key, Provider, Model) cho codei")
     .action(async () => {
       const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
       })
 
-      console.log("\n🔧 codeindex global setup\n")
+      console.log("\n🔧 codei global setup\n")
 
       // 1. Provider
       const providerInput = await ask(
@@ -72,8 +72,8 @@ export function registerSetupCommand(program: Command): void {
       saveGlobalEnv(config)
       
       rl.close()
-      console.log(`\n✅ Đã lưu cấu hình toàn cục vào ~/.codeindex/config.json`)
-      console.log(`✅ Đã lưu runtime env toàn cục vào ~/.codeindex/.env`)
-      console.log(`\n✨ Xong! Chạy setup một lần, các lần sau 'codeindex index' sẽ dùng cấu hình toàn cục này.`)
+      console.log(`\n✅ Đã lưu cấu hình toàn cục vào ~/.codei/config.json`)
+      console.log(`✅ Đã lưu runtime env toàn cục vào ~/.codei/.env`)
+      console.log(`\n✨ Xong! Chạy setup một lần, các lần sau 'codei index' sẽ dùng cấu hình toàn cục này.`)
     })
 }

@@ -1,8 +1,8 @@
-# codeindex
+# codei
 
 **Cut your AI coding costs by 95%. Vectorless code index for intelligent context retrieval.**
 
-> Every time you paste your codebase to ChatGPT or Claude, you're burning tokens. `codeindex` gives AI exactly the context it needs — nothing more.
+> Every time you paste your codebase to ChatGPT or Claude, you're burning tokens. `codei` gives AI exactly the context it needs — nothing more.
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat\&logo=typescript\&logoColor=white)
@@ -28,7 +28,7 @@ Every `CTRL+C → CTRL+V` to an AI chat burns tokens on code that has nothing to
 
 ## The Solution
 
-`codeindex` builds a **hierarchical tree index** of your codebase. When you ask a question, LLM reasoning selects exactly which modules, files, and symbols are relevant — then returns only that.
+`codei` builds a **hierarchical tree index** of your codebase. When you ask a question, LLM reasoning selects exactly which modules, files, and symbols are relevant — then returns only that.
 
 **Result: \~1,000-3,000 tokens per query instead of 50,000+**
 
@@ -39,9 +39,9 @@ After:  Paste 3 files (2KB)   → Same answer
 
 ***
 
-## Why codeindex?
+## Why codei?
 
-| <br />           | codeindex     | Vector Embeddings        | Manual Copy-Paste |
+| <br />           | codei         | Vector Embeddings        | Manual Copy-Paste |
 | ---------------- | ------------- | ------------------------ | ----------------- |
 | **Tokens/query** | \~2 KB        | \~100 KB                 | 50+ KB            |
 | **Setup**        | 2 minutes     | 30 minutes               | 0                 |
@@ -71,19 +71,19 @@ After:  Paste 3 files (2KB)   → Same answer
 pnpm install -g @codeindex/cli
 
 # 2. Setup once globally
-codeindex setup
+codei setup
 
 # 3. Index your project
 cd your-project
-codeindex index .
+codei index .
 
 # 4. Query!cd 
-codeindex query "How does the auth module work?"
+codei query "How does the auth module work?"
 ```
 
-Global setup is stored under `~/.codeindex/` and reused for all future projects.
+Global setup is stored under `~/.codei/` and reused for all future projects.
 
-If you prefer env-based global runtime config, `codeindex setup` also writes `~/.codeindex/.env`.
+If you prefer env-based global runtime config, `codei setup` also writes `~/.codei/.env`.
 
 For NVIDIA, a minimal global env looks like:
 
@@ -92,7 +92,7 @@ NVIDIA_API_KEY=nvapi-...
 CODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1
 ```
 
-**That's it.** Run setup once, then `codeindex index` works across projects.
+**That's it.** Run setup once, then `codei index` works across projects.
 
 ***
 
@@ -106,7 +106,7 @@ CODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    codeindex Index                          │
+│                    codei Index                              │
 │                                                             │
 │   Project                                                    │
 │   └── src/                                                   │
@@ -145,7 +145,7 @@ At 10 queries/day, that's **$15-45/month** saved.
 ### Claude Code
 
 ```bash
-# Add to ~/.claude/tools/codeindex.sh
+# Add to ~/.claude/tools/codei.sh
 curl -s -X POST http://localhost:3131/query \
   -d '{"query": "$1", "maxTokens": 3000}' | jq -r '.context'
 ```
@@ -162,8 +162,8 @@ When you need codebase context, run:
 ### VSCode (Cline)
 
 ```
-Use codeindex query "your question" to get relevant code context.
-Start server: codeindex serve . --port 3131
+Use codei query "your question" to get relevant code context.
+Start server: codei serve . --port 3131
 ```
 
 ***
@@ -201,7 +201,7 @@ See [docs/RELEASING.md](./docs/RELEASING.md) for the full npm release workflow.
 ## Architecture
 
 ```
-codeindex/
+codei/
 ├── packages/
 │   ├── core/                    # Tree index, retrieval, storage
 │   ├── cli/                     # CLI & HTTP server
@@ -223,10 +223,10 @@ MIT — Use it freely, even in commercial projects.
 
 ## Support
 
-If codeindex saves you time and money, consider buying me a coffee ☕
+If codei saves you time and money, consider buying me a coffee ☕
 
 [![Donate with PayPal](https://img.shields.io/badge/PayPal-zorrong@outlook.com-003087?style=for-the-badge\&logo=paypal)](https://paypal.me/zorrong)
 
 ***
 
-**Stop paying for context you don't need. Start using codeindex.**
+**Stop paying for context you don't need. Start using codei.**

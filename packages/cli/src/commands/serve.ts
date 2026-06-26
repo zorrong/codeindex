@@ -1,5 +1,5 @@
 /**
- * `codeindex serve` — start local HTTP server cho IDE integration.
+ * `codei serve` — start local HTTP server cho IDE integration.
  */
 
 import type { Command } from "commander"
@@ -15,6 +15,7 @@ export function registerServeCommand(program: Command): void {
     .option("--port <n>", "Port number", "3131")
     .option("--host <s>", "Host to bind (default: 127.0.0.1)", "127.0.0.1")
     .option("--index-dir <dir>", "Index directory")
+    .option("--summary-mode <mode>", "Summary mode: heuristic | llm | auto")
     .option("-v, --verbose", "Verbose output")
     .action(async (targetPath: string | undefined, options: Record<string, string | boolean>) => {
       const projectRoot = path.resolve(targetPath ?? ".")
@@ -23,6 +24,7 @@ export function registerServeCommand(program: Command): void {
 
       const overrides: Partial<CodeIndexConfig> = {}
       if (options["indexDir"]) overrides.indexDir = options["indexDir"] as string
+      if (options["summaryMode"]) overrides.summaryMode = options["summaryMode"] as any
       if (options["verbose"]) overrides.verbose = options["verbose"] as boolean
 
       const config = loadConfig(projectRoot, overrides)
@@ -46,7 +48,7 @@ export function registerServeCommand(program: Command): void {
         if (host !== "127.0.0.1" && host !== "localhost" && !config.serverApiKey) {
           console.warn(`Warning: server is bound to "${host}" without CODEINDEX_SERVER_API_KEY`)
         }
-        console.log(`🚀 codeindex server running at http://${host}:${port}`)
+        console.log(`🚀 codei server running at http://${host}:${port}`)
         console.log(`   Project: ${projectRoot}`)
         console.log(`   Index  : ${config.indexDir}/`)
         if (config.serverApiKey) {

@@ -1,11 +1,13 @@
 /**
- * `codeindex status` — show index health và stats.
+ * `codei status` — show index health và stats.
  */
 
 import type { Command } from "commander"
+import * as fs from "fs/promises"
 import * as path from "path"
 import { type CodeIndexConfig, loadConfig } from "../config.js"
-import { createLLMClient, createIndexManager } from "../createServices.js"
+import { createIndexManager, createNoopLLMClient } from "../createServices.js"
+import { FileSystemIndexStore, TraversalCache } from "@codeindex/core"
 
 export function registerStatusCommand(program: Command): void {
   program
@@ -13,6 +15,7 @@ export function registerStatusCommand(program: Command): void {
     .description("Show index health và stats")
     .option("--index-dir <dir>", "Index directory")
     .option("--json", "Output as JSON")
+    .option("--clear-cache", "Clear traversal cache for this project")
     .action(async (targetPath: string | undefined, options: Record<string, string | boolean>) => {
       const projectRoot = path.resolve(targetPath ?? ".")
 
@@ -23,18 +26,52 @@ export function registerStatusCommand(program: Command): void {
 
 
       try {
-        const llm = createLLMClient(config)
-        const manager = await createIndexManager(projectRoot, config, llm)
+        const manager = await createIndexManager(projectRoot, config, createNoopLLMClient())
         const status = await manager.status()
 
+        const store = new FileSystemIndexStore(projectRoot, config.indexDir)
+        const tree = await store.loadTree()
+        const traversalCachePath = path.join(projectRoot, config.indexDir, "traversal-cache.json")
+
+        const cacheKey = tree ? `tree:${tree.builtAt}` : undefined
+        const cache = new TraversalCache({
+          persistencePath: traversalCachePath,
+          ...(cacheKey !== undefined && { cacheKey }),
+        })
+
+        if (options["clearCache"] === true) {
+          cache.invalidate()
+        }
+
+        const cacheStats = cacheKey
+          ? { cacheKey, ...cache.stats() }
+          : { cacheKey: null, ...cache.stats() }
+
+        let traversalCacheBytes: number | null = null
+        try {
+          traversalCacheBytes = (await fs.stat(traversalCachePath)).size
+        } catch {
+          traversalCacheBytes = null
+        }
+
         if (options["json"] === true) {
-          console.log(JSON.stringify(status, null, 2))
+          console.log(JSON.stringify({
+            ...status,
+            summaryMode: config.summaryMode ?? null,
+            caches: {
+              traversal: {
+                path: traversalCachePath,
+                bytes: traversalCacheBytes,
+                ...cacheStats,
+              },
+            },
+          }, null, 2))
           return
         }
 
         if (!status.exists) {
           console.log("❌ No index found")
-          console.log(`   Run: codeindex index ${projectRoot}`)
+          console.log(`   Run: codei index ${projectRoot}`)
           return
         }
 
@@ -47,6 +84,12 @@ export function registerStatusCommand(program: Command): void {
         console.log(`   Built at  : ${builtAtStr}`)
         console.log(`   Files     : ${status.totalFiles}`)
         console.log(`   Symbols   : ${status.totalSymbols}`)
+        console.log(`   Summary   : ${config.summaryMode ?? "auto"}`)
+        console.log(`   CacheKey  : ${cacheKey ?? "unknown"}`)
+        console.log(`   CacheSize : ${cacheStats.size} entries (${traversalCacheBytes ?? 0} bytes)`)
+        if (options["clearCache"] === true) {
+          console.log(`   Cache     : cleared`)
+        }
 
         if (status.staleFiles.length > 0) {
           console.log(`\n⚠️  Stale files (${status.staleFiles.length}):`)
@@ -56,7 +99,7 @@ export function registerStatusCommand(program: Command): void {
           if (status.staleFiles.length > 10) {
             console.log(`   ... and ${status.staleFiles.length - 10} more`)
           }
-          console.log(`\n   Run: codeindex update`)
+          console.log(`\n   Run: codei update`)
         }
       } catch (err) {
         console.error(`\n❌ Status check failed: ${(err as Error).message}`)

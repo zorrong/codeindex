@@ -92,7 +92,7 @@ function findWorkspaceProtocols(manifest) {
 }
 
 function main() {
-  const packDir = mkdtempSync(join(tmpdir(), "codeindex-release-check-"))
+  const packDir = mkdtempSync(join(tmpdir(), "codei-release-check-"))
   const publicPackages = getPublicPackages()
 
   try {

@@ -25,19 +25,19 @@ When working with codeindex codebase, invoke the "codeindex" skill.
 
 ```bash
 # Check if index exists and is fresh
-codeindex status .
+codei status .
 
 # Build/rebuild index
-codeindex index .
+codei index .
 
 # Query for context (MUST do before reading files manually)
-codeindex query "your question here" --cwd .
+codei query "your question here" --cwd .
 
 # Start HTTP server for frequent queries
-codeindex serve . --port 3131
+codei serve . --port 3131
 
 # Update index after making changes
-codeindex update .
+codei update .
 ```
 
 ## HTTP API (Faster)
@@ -56,6 +56,6 @@ curl -X POST http://localhost:3131/update
 
 | Error | Action |
 |-------|--------|
-| "No index found" | Run `codeindex index .` first |
-| Stale results after editing | Run `codeindex update .` |
-| Query returns wrong context | Verify with `codeindex status .` then rebuild if needed |
+| "No index found" | Run `codei index .` first |
+| Stale results after editing | Run `codei update .` |
+| Query returns wrong context | Verify with `codei status .` then rebuild if needed |
