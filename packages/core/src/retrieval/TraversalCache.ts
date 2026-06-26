@@ -21,6 +21,7 @@ export class TraversalCache {
   private readonly ttlMs: number
   private readonly persistencePath: string | undefined
   private readonly persistenceDebounceMs: number
+  private cacheKey: string | undefined
   private flushTimer: ReturnType<typeof setTimeout> | null = null
 
   constructor(options: {
@@ -28,33 +29,43 @@ export class TraversalCache {
     ttlMs?: number
     persistencePath?: string
     persistenceDebounceMs?: number
+    cacheKey?: string
   } = {}) {
     this.maxEntries = options.maxEntries ?? 1000
     this.ttlMs = options.ttlMs ?? 60 * 60 * 1000
     this.persistencePath = options.persistencePath
     this.persistenceDebounceMs = options.persistenceDebounceMs ?? 400
+    this.cacheKey = options.cacheKey
 
     if (this.persistencePath && fsSync.existsSync(this.persistencePath)) {
       try {
         const raw = fsSync.readFileSync(this.persistencePath, "utf-8")
-        const data = JSON.parse(raw) as Array<{
-          originalQuery: string
-          result: TraversalResult
-          timestamp: number
-          hitCount: number
-        }>
-        for (const entry of data) {
-          const key = this.hashQuery(entry.originalQuery)
-          this.cache.set(key, {
-            result: entry.result,
-            queryHash: key,
-            originalQuery: entry.originalQuery,
-            timestamp: entry.timestamp,
-            hitCount: entry.hitCount,
-          })
+        const parsed = JSON.parse(raw) as unknown
+        const { fileCacheKey, entries } = this.parsePersisted(parsed)
+        if (this.cacheKey && fileCacheKey && this.cacheKey !== fileCacheKey) {
+          this.cache.clear()
+        } else {
+          if (!this.cacheKey && fileCacheKey) this.cacheKey = fileCacheKey
+          for (const entry of entries) {
+            const key = this.hashQuery(entry.originalQuery)
+            this.cache.set(key, {
+              result: entry.result,
+              queryHash: key,
+              originalQuery: entry.originalQuery,
+              timestamp: entry.timestamp,
+              hitCount: entry.hitCount,
+            })
+          }
         }
       } catch {}
     }
+  }
+
+  setCacheKey(cacheKey: string): void {
+    if (this.cacheKey === cacheKey) return
+    this.cacheKey = cacheKey
+    this.cache.clear()
+    this.scheduleFlush()
   }
 
   get(query: string): TraversalResult | null {
@@ -70,6 +81,39 @@ export class TraversalCache {
 
     entry.hitCount++
     return entry.result
+  }
+
+  peek(query: string, similarityThreshold = 0.8): { kind: "exact" | "similar"; result: TraversalResult } | null {
+    const key = this.hashQuery(query)
+    const entry = this.cache.get(key)
+    if (entry && Date.now() - entry.timestamp <= this.ttlMs) {
+      return { kind: "exact", result: entry.result }
+    }
+
+    const queryWords = this.tokenize(query)
+    const querySet = new Set(queryWords)
+
+    let bestMatch: CacheEntry | null = null
+    let bestScore = 0
+
+    for (const e of this.cache.values()) {
+      if (Date.now() - e.timestamp > this.ttlMs) continue
+      const entryWords = this.tokenize(e.originalQuery)
+      const entrySet = new Set(entryWords)
+      const intersection = [...querySet].filter((w) => entrySet.has(w)).length
+      const union = new Set([...querySet, ...entrySet]).size
+      const score = intersection / union
+      if (score >= similarityThreshold && score > bestScore) {
+        bestScore = score
+        bestMatch = e
+      }
+    }
+
+    if (bestMatch) {
+      return { kind: "similar", result: bestMatch.result }
+    }
+
+    return null
   }
 
   set(query: string, result: TraversalResult): void {
@@ -201,8 +245,55 @@ export class TraversalCache {
         hitCount: e.hitCount,
       }))
       fsSync.mkdirSync(path.dirname(this.persistencePath), { recursive: true })
-      fsSync.writeFileSync(this.persistencePath, JSON.stringify(entries, null, 2), "utf-8")
+      fsSync.writeFileSync(
+        this.persistencePath,
+        JSON.stringify({ cacheKey: this.cacheKey ?? "", entries }, null, 2),
+        "utf-8"
+      )
     } catch {}
+  }
+
+  private parsePersisted(
+    parsed: unknown
+  ): {
+    fileCacheKey: string | undefined
+    entries: Array<{
+      originalQuery: string
+      result: TraversalResult
+      timestamp: number
+      hitCount: number
+    }>
+  } {
+    if (Array.isArray(parsed)) {
+      return {
+        fileCacheKey: undefined,
+        entries: parsed as Array<{
+          originalQuery: string
+          result: TraversalResult
+          timestamp: number
+          hitCount: number
+        }>,
+      }
+    }
+
+    if (parsed && typeof parsed === "object") {
+      const obj = parsed as Record<string, unknown>
+      const fileCacheKey = typeof obj["cacheKey"] === "string" ? (obj["cacheKey"] as string) : undefined
+      const rawEntries = obj["entries"]
+      if (Array.isArray(rawEntries)) {
+        return {
+          fileCacheKey,
+          entries: rawEntries as Array<{
+            originalQuery: string
+            result: TraversalResult
+            timestamp: number
+            hitCount: number
+          }>,
+        }
+      }
+    }
+
+    return { fileCacheKey: undefined, entries: [] }
   }
 
   private hashQuery(query: string): string {

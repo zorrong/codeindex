@@ -5,7 +5,7 @@
 import type { Command } from "commander"
 import * as path from "path"
 import { loadConfig } from "../config.js"
-import { createLLMClient, createIndexManager } from "../createServices.js"
+import { createLLMClient, createIndexManager, createNoopLLMClient } from "../createServices.js"
 import { FileSystemIndexStore, Retriever, TraversalCache } from "@codeindex/core"
 
 export function registerQueryCommand(program: Command): void {
@@ -37,9 +37,10 @@ export function registerQueryCommand(program: Command): void {
       }
 
       try {
-        const llm = createLLMClient(config)
+        const llm = (config.summaryMode ?? "auto") === "heuristic" ? createNoopLLMClient() : createLLMClient(config)
         const cache = new TraversalCache({
           persistencePath: path.join(projectRoot, config.indexDir, "traversal-cache.json"),
+          cacheKey: `tree:${tree.builtAt}`,
         })
         const retriever = new Retriever({
           llmClient: llm,
@@ -74,9 +75,11 @@ export function registerQueryCommand(program: Command): void {
         } else {
           // Text format — raw context sẵn sàng paste vào AI
           if (options["verbose"] === true) {
+            const peek = cache.peek(queryText)
             console.error(`[codeindex] Query: "${queryText}"`)
             console.error(`[codeindex] Traversal: ${result.traversalPath.join(" → ")}`)
             console.error(`[codeindex] Tokens: ~${result.estimatedTokens}`)
+            console.error(`[codeindex] Cache: ${peek ? peek.kind : "miss"}`)
             console.error("---")
           }
 

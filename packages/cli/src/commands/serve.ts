@@ -5,7 +5,7 @@
 import type { Command } from "commander"
 import * as path from "path"
 import { type CodeIndexConfig, loadConfig, resolveApiKey } from "../config.js"
-import { createLLMClient } from "../createServices.js"
+import { createLLMClient, createNoopLLMClient } from "../createServices.js"
 import { HttpServer } from "../server/HttpServer.js"
 
 export function registerServeCommand(program: Command): void {
@@ -28,15 +28,10 @@ export function registerServeCommand(program: Command): void {
       const config = loadConfig(projectRoot, overrides)
 
 
-      let apiKey: string
-      try {
-        apiKey = resolveApiKey(config)
-      } catch (err) {
-        console.error(`Error: ${(err as Error).message}`)
-        process.exit(1)
-      }
-
-      const llmClient = createLLMClient({ ...config, apiKey })
+      const llmClient =
+        (config.summaryMode ?? "auto") === "heuristic"
+          ? createNoopLLMClient()
+          : createLLMClient({ ...config, apiKey: resolveApiKey(config) })
 
       const server = new HttpServer({
         port,

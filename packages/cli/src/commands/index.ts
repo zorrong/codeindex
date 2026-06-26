@@ -14,6 +14,7 @@ export function registerIndexCommand(program: Command): void {
     .option("--provider <provider>", "LLM provider: openai | anthropic | google | custom | ollama")
     .option("--model <model>", "LLM model name")
     .option("--index-dir <dir>", "Output directory cho index files", ".index")
+    .option("--summary-mode <mode>", "Summary mode: heuristic | llm | auto")
     .option("--name <name>", "Project name")
     .option("-v, --verbose", "Verbose output")
     .action(async (targetPath: string | undefined, options: Record<string, string | boolean>) => {
@@ -24,6 +25,7 @@ export function registerIndexCommand(program: Command): void {
       if (options["provider"]) overrides.provider = options["provider"] as any
       if (options["model"]) overrides.model = options["model"] as string
       if (options["indexDir"]) overrides.indexDir = options["indexDir"] as string
+      if (options["summaryMode"]) overrides.summaryMode = options["summaryMode"] as any
       if (options["name"]) overrides.projectName = options["name"] as string
       if (options["verbose"]) overrides.verbose = options["verbose"] as boolean
 

@@ -159,12 +159,23 @@ Project-level configuration. Recommended: keep this file minimal and put API/pro
 {
   "indexDir": ".index",
   "projectName": "my-project",
+  "summaryMode": "heuristic",
   "serverApiKey": "optional-api-key",
   "serverCorsOrigin": "*",
   "serverMaxBodyBytes": 1048576,
   "serverRateLimitPerMinute": 120
 }
 ```
+
+`summaryMode` controls how `codeindex` generates file/module summaries:
+
+| Mode | Behavior | LLM calls during index |
+|------|----------|------------------------|
+| `heuristic` | Build summaries locally from symbols/imports/exports | 0 |
+| `llm` | Use LLM to generate summaries | High |
+| `auto` | Heuristic-first, may use LLM in future versions | Low |
+
+Recommended default: `heuristic` (stable and avoids provider rate limits).
 
 ### `.env`
 
@@ -218,6 +229,17 @@ Backward-compatible global configuration (also created by `codeindex setup`).
 | `CODEINDEX_MODEL` | Override default model |
 | `CODEINDEX_BASE_URL` | Override API base URL |
 | `CODEINDEX_API_KEY` | Override API key |
+
+## Index Output Files
+
+When indexing, `codeindex` writes:
+
+| Path | Description |
+|------|-------------|
+| `.index/tree.json` | Main tree index |
+| `.index/meta.json` | Metadata + git hash map |
+| `.index/summaries.json` | File summary cache (reused across index/update) |
+| `.index/traversal-cache.json` | Persistent traversal cache for query results |
 
 ---
 

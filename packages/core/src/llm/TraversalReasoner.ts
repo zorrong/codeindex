@@ -43,9 +43,9 @@ export class TraversalReasoner {
     }
 
     const heuristic = this.selectByHeuristic(query, candidates, maxSelect)
-    if (heuristic) {
-      return { selectedIds: heuristic, reasoning: "Heuristic selection" }
-    }
+    if (heuristic) return { selectedIds: heuristic, reasoning: "Heuristic selection" }
+
+    const heuristicFallback = this.selectFallback(query, candidates, maxSelect)
 
     const candidateList = candidates
       .map((c) => `[${c.nodeId}] ${c.title}: ${c.summary}`)
@@ -72,14 +72,21 @@ Respond with ONLY a JSON object, no markdown:
 }`
 
 
-    const response = await this.llm.complete({
-      messages: [{ role: "user", content: prompt }],
-      maxTokens: 200,
-      temperature: 0.0,
-      requestLabel: `traverse:${level}`,
-    })
+    try {
+      const response = await this.llm.complete({
+        messages: [{ role: "user", content: prompt }],
+        maxTokens: 200,
+        temperature: 0.0,
+        requestLabel: `traverse:${level}`,
+      })
 
-    return this.parseDecision(response.content, candidates)
+      return this.parseDecision(response.content, candidates)
+    } catch {
+      return {
+        selectedIds: heuristicFallback,
+        reasoning: "LLM failed, using heuristic fallback",
+      }
+    }
   }
 
   private parseDecision(
@@ -150,5 +157,28 @@ Respond with ONLY a JSON object, no markdown:
 
   private tokenize(text: string): string[] {
     return text.split(/\s+/).filter(Boolean)
+  }
+
+  private selectFallback(query: string, candidates: NodeCandidate[], maxSelect: number): string[] {
+    const q = this.normalize(query)
+    const qTokens = this.tokenize(q).filter((t) => t.length >= 2)
+    if (qTokens.length === 0) {
+      return candidates.slice(0, maxSelect).map((c) => c.nodeId)
+    }
+
+    const scored = candidates
+      .map((c) => {
+        const hay = this.normalize(`${c.title} ${c.summary} ${c.nodeId}`)
+        let hits = 0
+        for (const t of qTokens) {
+          if (hay.includes(t)) hits++
+        }
+        const score = hits / Math.max(3, qTokens.length)
+        return { id: c.nodeId, score }
+      })
+      .sort((a, b) => b.score - a.score)
+
+    const top = scored.slice(0, maxSelect).map((s) => s.id)
+    return top.length > 0 ? top : candidates.slice(0, maxSelect).map((c) => c.nodeId)
   }
 }

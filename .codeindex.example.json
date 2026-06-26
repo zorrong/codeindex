@@ -1,4 +1,5 @@
 {
   "indexDir": ".index",
-  "projectName": "my-project"
+  "projectName": "my-project",
+  "summaryMode": "heuristic"
 }

@@ -167,6 +167,8 @@ export class HttpServer {
         return
       }
 
+      this.traversalCache.setCacheKey(`tree:${tree.builtAt}`)
+
       const retriever = new Retriever({
         llmClient: this.llmClient,
         cache: this.traversalCache,
