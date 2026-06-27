@@ -1,6 +1,6 @@
 {
-  "name": "@pnftrading/codei-core",
-  "version": "0.1.0",
+  "name": "@codeindex/core",
+  "version": "0.1.1",
   "description": "Core engine — tree index, retrieval logic, interfaces",
   "type": "module",
   "main": "./dist/index.js",

@@ -4,7 +4,7 @@
  */
 
 import OpenAI from "openai"
-import type { LLMClient, LLMRequest, LLMResponse } from "@pnftrading/codei-core"
+import type { LLMClient, LLMRequest, LLMResponse } from "@codeindex/core"
 
 export interface OpenAILLMClientOptions {
   apiKey: string

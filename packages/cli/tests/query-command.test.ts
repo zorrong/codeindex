@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest"
-import { TraversalCache } from "@pnftrading/codei-core"
+import { TraversalCache } from "@codeindex/core"
 import { retrieveWithVerboseCacheStatus } from "../src/commands/query.js"
 
 describe("retrieveWithVerboseCacheStatus", () => {

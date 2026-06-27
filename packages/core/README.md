@@ -1,4 +1,4 @@
-# @pnftrading/codei-core
+# @codeindex/core
 
 **Core engine for codei** — Tree index, retrieval logic, and interfaces.
 
@@ -13,7 +13,7 @@ The core package provides:
 ## Usage
 
 ```typescript
-import { IndexManager, TreeTraversal } from "@pnftrading/codei-core"
+import { IndexManager, TreeTraversal } from "@codeindex/core"
 
 const manager = new IndexManager({
   projectRoot: "/path/to/project",

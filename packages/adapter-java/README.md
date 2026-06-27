@@ -1,4 +1,4 @@
-# @pnftrading/codei-adapter-java
+# @codeindex/adapter-java
 
 **Java language adapter for codei** — Parses Java classes, interfaces, fields, and methods.
 
@@ -10,12 +10,12 @@
 
 - Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@pnftrading/codei-core`
+- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
 
 ## Usage
 
 ```typescript
-import { JavaAdapter } from "@pnftrading/codei-adapter-java"
+import { JavaAdapter } from "@codeindex/adapter-java"
 
 const adapter = new JavaAdapter()
 ```

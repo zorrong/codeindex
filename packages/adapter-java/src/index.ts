@@ -1,5 +1,5 @@
 /**
- * @pnftrading/codei-adapter-java — Java language adapter entry point.
+ * @codeindex/adapter-java — Java language adapter entry point.
  */
 
 export { JavaAdapter } from "./JavaAdapter.js"

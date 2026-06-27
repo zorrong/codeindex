@@ -2,7 +2,7 @@
 
 **Mỗi ngày bạn paste code vào ChatGPT, bạn đang đốt tiền cho những context không liên quan.**
 
-> Ghi chú thương hiệu: `codei` là tên mới của `Codeindex`. Chữ `i` đại diện cho cả `index` và `intelligent`. Lệnh CLI là `codei`, gói npm để cài CLI là `@pnftrading/codei`, còn core/adapters được publish dưới `@pnftrading/codei-*`.
+> Ghi chú thương hiệu: `codei` là tên mới của `Codeindex`. Chữ `i` đại diện cho cả `index` và `intelligent`. Lệnh CLI là `codei`, gói npm để cài CLI là `@codeindex/cli`, còn core/adapters được publish dưới `@codeindex/*`.
 
 ***
 
@@ -76,7 +76,7 @@ After:  Paste 3 files (2KB)   → Cùng câu trả lời
 
 ```bash
 # 1. Cài đặt
-npm install -g @pnftrading/codei
+npm install -g @codeindex/cli
 
 # 2. Setup (một lần)
 codei setup

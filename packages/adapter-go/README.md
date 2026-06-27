@@ -1,4 +1,4 @@
-# @pnftrading/codei-adapter-go
+# @codeindex/adapter-go
 
 **Go language adapter for codei** — Parses Go source for packages, types, and functions.
 
@@ -10,12 +10,12 @@
 
 - Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@pnftrading/codei-core`
+- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
 
 ## Usage
 
 ```typescript
-import { GoAdapter } from "@pnftrading/codei-adapter-go"
+import { GoAdapter } from "@codeindex/adapter-go"
 
 const adapter = new GoAdapter()
 ```

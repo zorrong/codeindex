@@ -1,5 +1,5 @@
 /**
- * @pnftrading/codei-adapter-swift — Swift language adapter entry point.
+ * @codeindex/adapter-swift — Swift language adapter entry point.
  */
 
 export { SwiftAdapter } from "./SwiftAdapter.js"

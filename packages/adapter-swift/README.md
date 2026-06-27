@@ -1,4 +1,4 @@
-# @pnftrading/codei-adapter-swift
+# @codeindex/adapter-swift
 
 **Swift language adapter for codei** — Parses Swift types, protocols, functions, and properties.
 
@@ -10,12 +10,12 @@
 
 - Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@pnftrading/codei-core`
+- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
 
 ## Usage
 
 ```typescript
-import { SwiftAdapter } from "@pnftrading/codei-adapter-swift"
+import { SwiftAdapter } from "@codeindex/adapter-swift"
 
 const adapter = new SwiftAdapter()
 ```

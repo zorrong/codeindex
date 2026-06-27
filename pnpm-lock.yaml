@@ -32,7 +32,7 @@ importers:
 
   packages/adapter-cpp:
     dependencies:
-      '@pnftrading/codei-core':
+      '@codeindex/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -42,7 +42,7 @@ importers:
 
   packages/adapter-csharp:
     dependencies:
-      '@pnftrading/codei-core':
+      '@codeindex/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -52,7 +52,7 @@ importers:
 
   packages/adapter-go:
     dependencies:
-      '@pnftrading/codei-core':
+      '@codeindex/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -62,7 +62,7 @@ importers:
 
   packages/adapter-java:
     dependencies:
-      '@pnftrading/codei-core':
+      '@codeindex/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -72,7 +72,7 @@ importers:
 
   packages/adapter-php:
     dependencies:
-      '@pnftrading/codei-core':
+      '@codeindex/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -82,7 +82,7 @@ importers:
 
   packages/adapter-python:
     dependencies:
-      '@pnftrading/codei-core':
+      '@codeindex/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -92,7 +92,7 @@ importers:
 
   packages/adapter-rust:
     dependencies:
-      '@pnftrading/codei-core':
+      '@codeindex/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -102,7 +102,7 @@ importers:
 
   packages/adapter-swift:
     dependencies:
-      '@pnftrading/codei-core':
+      '@codeindex/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -112,7 +112,7 @@ importers:
 
   packages/adapter-typescript:
     dependencies:
-      '@pnftrading/codei-core':
+      '@codeindex/core':
         specifier: workspace:*
         version: link:../core
       ignore:
@@ -128,34 +128,34 @@ importers:
 
   packages/cli:
     dependencies:
-      '@pnftrading/codei-adapter-cpp':
+      '@codeindex/adapter-cpp':
         specifier: workspace:*
         version: link:../adapter-cpp
-      '@pnftrading/codei-adapter-csharp':
+      '@codeindex/adapter-csharp':
         specifier: workspace:*
         version: link:../adapter-csharp
-      '@pnftrading/codei-adapter-go':
+      '@codeindex/adapter-go':
         specifier: workspace:*
         version: link:../adapter-go
-      '@pnftrading/codei-adapter-java':
+      '@codeindex/adapter-java':
         specifier: workspace:*
         version: link:../adapter-java
-      '@pnftrading/codei-adapter-php':
+      '@codeindex/adapter-php':
         specifier: workspace:*
         version: link:../adapter-php
-      '@pnftrading/codei-adapter-python':
+      '@codeindex/adapter-python':
         specifier: workspace:*
         version: link:../adapter-python
-      '@pnftrading/codei-adapter-rust':
+      '@codeindex/adapter-rust':
         specifier: workspace:*
         version: link:../adapter-rust
-      '@pnftrading/codei-adapter-swift':
+      '@codeindex/adapter-swift':
         specifier: workspace:*
         version: link:../adapter-swift
-      '@pnftrading/codei-adapter-typescript':
+      '@codeindex/adapter-typescript':
         specifier: workspace:*
         version: link:../adapter-typescript
-      '@pnftrading/codei-core':
+      '@codeindex/core':
         specifier: workspace:*
         version: link:../core
       commander:

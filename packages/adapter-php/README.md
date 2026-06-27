@@ -1,4 +1,4 @@
-# @pnftrading/codei-adapter-php
+# @codeindex/adapter-php
 
 **PHP language adapter for codei** — Parses PHP namespaces, classes, methods, and properties.
 
@@ -10,12 +10,12 @@
 
 - Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@pnftrading/codei-core`
+- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
 
 ## Usage
 
 ```typescript
-import { PhpAdapter } from "@pnftrading/codei-adapter-php"
+import { PhpAdapter } from "@codeindex/adapter-php"
 
 const adapter = new PhpAdapter()
 ```

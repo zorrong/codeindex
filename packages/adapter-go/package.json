@@ -1,6 +1,6 @@
 {
-  "name": "@pnftrading/codei-adapter-go",
-  "version": "0.1.0",
+  "name": "@codeindex/adapter-go",
+  "version": "0.1.1",
   "description": "Go language adapter using regex-based AST extraction",
   "type": "module",
   "main": "./dist/index.js",
@@ -16,7 +16,7 @@
     "test": "echo 'adapter-go: no tests yet'"
   },
   "dependencies": {
-    "@pnftrading/codei-core": "workspace:*"
+    "@codeindex/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.7.3"

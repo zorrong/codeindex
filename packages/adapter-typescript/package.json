@@ -1,6 +1,6 @@
 {
-  "name": "@pnftrading/codei-adapter-typescript",
-  "version": "0.1.0",
+  "name": "@codeindex/adapter-typescript",
+  "version": "0.1.1",
   "description": "TypeScript language adapter — uses ts-morph for AST parsing",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,7 +18,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@pnftrading/codei-core": "workspace:*",
+    "@codeindex/core": "workspace:*",
     "ignore": "^5.3.2",
     "ts-morph": "^22.0.0"
   },

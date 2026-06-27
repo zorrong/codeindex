@@ -69,7 +69,7 @@ Xem thêm:
 ### 1. Cài CLI
 
 ```bash
-pnpm install -g @pnftrading/codei
+pnpm install -g @codeindex/cli
 ```
 
 ### 2. Thiết lập provider
