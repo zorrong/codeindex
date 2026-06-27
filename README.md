@@ -6,6 +6,7 @@
 
 > Brand note: `codei` is the new product name for `Codeindex`. The `i` stands for both `index` and `intelligent` context retrieval. The CLI command is `codei`, the npm package is `pnftrading_codei`, and the core/adapter packages are published under `pnftrading_codei-*`.
 > npm package: https://www.npmjs.com/package/pnftrading_codei
+> Current npm release: `pnftrading_codei@0.1.2`
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat\&logo=typescript\&logoColor=white)
@@ -50,7 +51,7 @@ After:  Paste 3 files (2KB)   → Same answer
 | **Setup**        | 2 minutes     | 30 minutes               | 0                 |
 | **Accuracy**     | LLM reasoning | Cosine similarity        | You're guessing   |
 | **Updates**      | Instant       | Re-embed entire codebase | Manual            |
-| **Privacy**      | 100% local    | Data leaves machine      | You're in control |
+| **Privacy**      | Local index; provider call only when configured | Data leaves machine | You choose what to paste |
 | **Cost**         | Free (MIT)    | $20-100/month            | Free (wasteful)   |
 
 ***
@@ -83,6 +84,8 @@ codei index .
 # 4. Query!
 codei query "How does the auth module work?"
 ```
+
+The npm package installs both command aliases: `codei` and `codeindex`.
 
 Global setup is stored under `~/.codei/` and reused for all future projects.
 
@@ -212,7 +215,7 @@ codei/
 └── docs/                        # Documentation
 ```
 
-**No external dependencies.** Everything runs locally.
+The index and HTTP server run locally. By default, semantic summaries and query reasoning use your configured LLM provider; use `ollama` for a fully local model path.
 
 ***
 

@@ -6,6 +6,7 @@ Thay vì dump toàn bộ codebase vào prompt (50k+ tokens), `codei` build một
 
 > Ghi chú thương hiệu: `codei` là tên mới của `Codeindex`. Chữ `i` mang hai ý nghĩa: `index` và `intelligent`. Lệnh CLI là `codei`, gói npm để cài CLI là `pnftrading_codei`, còn core/adapters được publish dưới `pnftrading_codei-*`.
 > npm package: https://www.npmjs.com/package/pnftrading_codei
+> Bản npm hiện tại: `pnftrading_codei@0.1.2`
 
 Inspired by [PageIndex](https://github.com/VectifyAI/PageIndex), adapted cho codebase TypeScript.
 
@@ -14,26 +15,24 @@ Inspired by [PageIndex](https://github.com/VectifyAI/PageIndex), adapted cho cod
 ## Cài đặt nhanh
 
 ```bash
-# Clone repo
-git clone <this-repo>
-cd <repo-folder>
-
-# Install dependencies
-pnpm install
-
-# Build tất cả packages
-pnpm build
-
-# Link CLI toàn cục (dành cho phát triển)
-cd packages/cli && pnpm link --global
-
-# Chạy test toàn bộ dự án
-pnpm test
-pnpm test:watch # Chế độ theo dõi thay đổi
+# Cài từ npmjs
+npm install -g pnftrading_codei
 
 # Cấu hình API Key toàn cục (CHỈ CẦN LÀM 1 LẦN)
 codei setup
+```
 
+Gói npm cài cả hai lệnh: `codei` và `codeindex`.
+
+### Cài từ source để phát triển
+
+```bash
+git clone <this-repo>
+cd <repo-folder>
+pnpm install
+pnpm build
+cd packages/cli && pnpm link --global
+pnpm test
 ```
 
 ---
@@ -50,7 +49,7 @@ codei setup
 
 Lệnh này sẽ hỏi bạn Provider (OpenAI, Gemini, v.v.), API Key, Model name và Base URL (nếu có).
 
-Thông tin này sẽ được lưu tại `~/.codei/config.json` và áp dụng cho **tất cả** các dự án sau này.
+Thông tin runtime sẽ được lưu tại `~/.codei/config.json` và `~/.codei/.env`, rồi áp dụng cho **tất cả** các dự án sau này.
 
 ### Bước 2 — Khởi tạo dự án (Init project)
 
@@ -65,14 +64,12 @@ Nhấn **Enter** để xác nhận các giá trị mặc định được lấy 
 
 ```json
 {
-  "provider": "openai",
-  "model": "gpt-4o",
   "indexDir": ".index"
 }
 ```
 
 > [!TIP]
-> Bạn vẫn có thể ghi đè (override) cấu hình toàn cục bằng cách sửa file `.codei.json` dự án hoặc dùng biến môi trường.
+> `.codei.json` chỉ dành cho cấu hình local của project như `indexDir`, `projectName`, `summaryMode`, server settings. Provider/model/API key nên để trong `~/.codei/.env`, `.env` của project, biến môi trường, hoặc CLI flags.
 
 **Thứ tự ưu tiên (Priority):**
 `Mặc định < Toàn cục (~/.codei) < Dự án (.codei.json) < Biến môi trường (ENV) < CLI flags`
@@ -83,6 +80,7 @@ Nhấn **Enter** để xác nhận các giá trị mặc định được lấy 
 | `openai` | `OPENAI_API_KEY` | `gpt-4o` |
 | `anthropic` | `ANTHROPIC_API_KEY` | `claude-sonnet-4-5` |
 | `google` | `GOOGLE_API_KEY` | `gemini-1.5-flash` |
+| `nvidia` | `NVIDIA_API_KEY` | `minimaxai/minimax-m3` |
 | `custom` | `CUSTOM_API_KEY` | `gpt-4o-compatible` |
 | `ollama` | _(không cần)_ | `llama3.2` |
 

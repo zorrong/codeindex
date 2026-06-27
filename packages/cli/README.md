@@ -6,6 +6,7 @@
 
 > Brand note: the product and CLI are now called `codei`. The `i` stands for both `index` and `intelligent` context retrieval. The published CLI package is `pnftrading_codei`, while the core and adapter packages are published under `pnftrading_codei-*`.
 > npm package: https://www.npmjs.com/package/pnftrading_codei
+> Current npm release: `pnftrading_codei@0.1.2`
 
 ## Quick Start
 
@@ -23,6 +24,8 @@ codei index .
 # Query!
 codei query "How does authentication work?"
 ```
+
+The package installs both command aliases: `codei` and `codeindex`.
 
 ## Commands
 
@@ -45,7 +48,7 @@ CODEI_MODEL=minimaxai/minimax-m3
 CODEI_BASE_URL=https://integrate.api.nvidia.com/v1
 ```
 
-`codei setup` writes global config to `~/.codei/config.json` and `~/.codei/.env`, so in most cases you only need to configure it once.
+`codei setup` writes global config to `~/.codei/config.json` and runtime env to `~/.codei/.env`, so in most cases you only need to configure it once.
 
 ## Features
 
