@@ -1,6 +1,8 @@
-# 🚀 Introducing codeindex: Giảm 95% chi phí AI coding
+# 🚀 Introducing codei: Giảm 95% chi phí AI coding
 
 **Mỗi ngày bạn paste code vào ChatGPT, bạn đang đốt tiền cho những context không liên quan.**
+
+> Ghi chú thương hiệu: `codei` là tên mới của `Codeindex`. Chữ `i` đại diện cho cả `index` và `intelligent`. CLI dùng tên `codei`, còn npm package scope vẫn là `@codeindex/*` để giữ tương thích.
 
 ***
 
@@ -22,7 +24,7 @@ Mỗi lần `CTRL+C → CTRL+V` đốt tokens cho code chẳng liên quan gì đ
 
 ## Giải pháp
 
-`codeindex` xây dựng một **cây index phân cấp** của codebase. Khi bạn hỏi, LLM reasoning chọn chính xác module, file, và symbol nào liên quan — rồi trả về chỉ phần đó.
+`codei` xây dựng một **cây index phân cấp** của codebase. Khi bạn hỏi, LLM reasoning chọn chính xác module, file, và symbol nào liên quan — rồi trả về chỉ phần đó.
 
 **Kết quả: \~1,000-3,000 tokens/query thay vì 50,000+**
 
@@ -33,9 +35,9 @@ After:  Paste 3 files (2KB)   → Cùng câu trả lời
 
 ***
 
-## Tại sao dùng codeindex?
+## Tại sao dùng codei?
 
-| <br />           | codeindex      | Vector Embeddings | Copy-Paste thủ công |
+| <br />           | codei          | Vector Embeddings | Copy-Paste thủ công |
 | ---------------- | -------------- | ----------------- | ------------------- |
 | **Tokens/query** | \~2 KB         | \~100 KB          | 50+ KB              |
 | **Setup**        | 2 phút         | 30 phút           | 0                   |

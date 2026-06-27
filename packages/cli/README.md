@@ -4,6 +4,8 @@
 
 > Cut your AI coding costs by 95%. `codei` gives AI exactly the context it needs — nothing more.
 
+> Brand note: the product and CLI are now called `codei`. The `i` stands for both `index` and `intelligent` context retrieval. The package name stays `@codeindex/cli` for compatibility with the existing npm scope.
+
 ## Quick Start
 
 ```bash

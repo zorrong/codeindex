@@ -1,5 +1,7 @@
 # API Reference
 
+> Brand note: `codei` is the new product and CLI name for `Codeindex`. The `i` stands for both `index` and `intelligent` context retrieval. The npm package scope remains `@codeindex/*` for compatibility.
+
 ## HTTP Server
 
 Start the server:

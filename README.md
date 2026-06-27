@@ -4,6 +4,8 @@
 
 > Every time you paste your codebase to ChatGPT or Claude, you're burning tokens. `codei` gives AI exactly the context it needs — nothing more.
 
+> Brand note: `codei` is the new product name for `Codeindex`. The `i` stands for both `index` and `intelligent` context retrieval. The CLI is `codei`, while the npm package scope remains `@codeindex/*` for compatibility.
+
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat\&logo=typescript\&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat\&logo=nodedotjs\&logoColor=white)
@@ -77,7 +79,7 @@ codei setup
 cd your-project
 codei index .
 
-# 4. Query!cd 
+# 4. Query!
 codei query "How does the auth module work?"
 ```
 

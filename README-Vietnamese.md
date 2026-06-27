@@ -4,6 +4,8 @@
 
 Thay vì dump toàn bộ codebase vào prompt (50k+ tokens), `codei` build một hierarchical tree index và dùng LLM reasoning để tìm đúng context — giảm từ **50,000+ token xuống còn ~1,000-3,000 token** per query.
 
+> Ghi chú thương hiệu: `codei` là tên mới của `Codeindex`. Chữ `i` mang hai ý nghĩa: `index` và `intelligent`. Tên CLI là `codei`, còn npm package scope vẫn là `@codeindex/*` để giữ tương thích.
+
 Inspired by [PageIndex](https://github.com/VectifyAI/PageIndex), adapted cho codebase TypeScript.
 
 ---
@@ -13,7 +15,7 @@ Inspired by [PageIndex](https://github.com/VectifyAI/PageIndex), adapted cho cod
 ```bash
 # Clone repo
 git clone <this-repo>
-cd codeindex
+cd <repo-folder>
 
 # Install dependencies
 pnpm install
