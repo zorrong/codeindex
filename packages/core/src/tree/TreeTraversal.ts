@@ -44,6 +44,11 @@ export class TreeTraversal {
     const selectedFiles: FileNode[] = []
     const selectedSymbols: SymbolNode[] = []
 
+    const directSymbolResult = await this.tryDirectSymbolTraversal(tree, query, path)
+    if (directSymbolResult) {
+      return directSymbolResult
+    }
+
     // ── Level 1: Find starting modules/files ───────────────────────────────
     let candidateNodes = tree.root.children.map((id) => tree.nodes[id]).filter(Boolean)
 
@@ -199,5 +204,63 @@ export class TreeTraversal {
         summary: n!.shortSummary,
       }))
   }
-}
 
+  private async tryDirectSymbolTraversal(
+    tree: IndexTree,
+    query: string,
+    path: string[]
+  ): Promise<TraversalResult | null> {
+    if (!this.isDirectSymbolQuery(query)) {
+      return null
+    }
+
+    const symbolCandidates: NodeCandidate[] = Object.values(tree.nodes)
+      .filter((n): n is SymbolNode => n?.level === "symbol")
+      .map((n) => ({
+        nodeId: n.nodeId,
+        title: `${n.title} (${n.kind})`,
+        summary: n.shortSummary,
+      }))
+
+    if (symbolCandidates.length === 0) {
+      return null
+    }
+
+    const decision = await this.reasoner.selectNodes(
+      query,
+      symbolCandidates,
+      "symbol",
+      this.options.maxSymbols
+    )
+
+    if (decision.selectedIds.length === 0) {
+      return null
+    }
+
+    const selectedSymbols = decision.selectedIds
+      .map((id) => tree.nodes[id])
+      .filter((node): node is SymbolNode => node?.level === "symbol")
+
+    if (selectedSymbols.length === 0) {
+      return null
+    }
+
+    const filePaths = new Set(selectedSymbols.map((symbol) => symbol.filePath))
+    const selectedFiles = Array.from(filePaths)
+      .map((filePath) => tree.nodes[`file:${filePath}`])
+      .filter((node): node is FileNode => node?.level === "file")
+
+    if (selectedFiles.length === 0) {
+      return null
+    }
+
+    path.push(`direct-symbols: [${decision.selectedIds.join(", ")}]`)
+    return { selectedFiles, selectedSymbols, path }
+  }
+
+  private isDirectSymbolQuery(query: string): boolean {
+    return query
+      .split(/\s+/)
+      .some((part) => /[a-z][A-Z]|[A-Z][a-z]+[A-Z]|[_./:-]/.test(part))
+  }
+}
