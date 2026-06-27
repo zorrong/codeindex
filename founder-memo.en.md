@@ -1,7 +1,7 @@
 # Founder Memo: Codeindex
 
 ## Thesis
-`codeindex` is context infrastructure for AI coding agents. It helps agents retrieve the right parts of a codebase with far fewer tokens, reducing AI spend while improving accuracy on real-world repositories.
+`codei` is context infrastructure for AI coding agents. It helps agents retrieve the right parts of a codebase with far fewer tokens, reducing AI spend while improving accuracy on real-world repositories.
 
 ## Problem
 AI agents do not primarily fail because they lack intelligence. They fail because context retrieval is still weak.
@@ -14,9 +14,9 @@ When operating on real codebases, agents often:
 The result is a growing gap between the promise of AI coding and the reality inside production repositories: agents are more expensive than expected and less reliable than teams need.
 
 ## Solution
-`codeindex` indexes a codebase structurally and uses reasoning to return a compact, relevant context pack that an agent can use immediately.
+`codei` indexes a codebase structurally and uses reasoning to return a compact, relevant context pack that an agent can use immediately.
 
-Instead of dumping an entire repository into a prompt, `codeindex` helps agents retrieve:
+Instead of dumping an entire repository into a prompt, `codei` helps agents retrieve:
 - the right symbols
 - the right dependency chain
 - the right files
@@ -47,7 +47,7 @@ Initial ICP:
 This is not a product for every developer at the outset. It is for teams with enough pain to pay for better accuracy and efficiency.
 
 ## Product Strategy
-`codeindex` should be built as developer infrastructure, not merely as a CLI utility.
+`codei` should be built as developer infrastructure, not merely as a CLI utility.
 
 The right product layers are:
 - local CLI for individual developers
@@ -65,7 +65,7 @@ The differentiation is not “search.” The differentiation is:
 - privacy and local-first deployment
 - multi-agent, multi-client compatibility
 
-If executed well, `codeindex` becomes an ROI-clear layer in the AI coding stack: use fewer tokens to complete more tasks correctly.
+If executed well, `codei` becomes an ROI-clear layer in the AI coding stack: use fewer tokens to complete more tasks correctly.
 
 ## Business Model
 Plausible monetization paths:
@@ -86,7 +86,7 @@ Customers are not paying for “an index.” They are paying for:
 - Being perceived as a utility instead of a must-have workflow layer
 
 ## What Must Be True
-For this to become a real business, `codeindex` must prove:
+For this to become a real business, `codei` must prove:
 - meaningful token spend reduction
 - meaningful improvement in agent task success rate
 - installation simple enough for daily use
@@ -100,4 +100,4 @@ For this to become a real business, `codeindex` must prove:
 5. Tighten positioning around one message: context infrastructure for coding agents
 
 ## Bottom Line
-`codeindex` has the potential to become an important developer infrastructure layer in AI-native software development. If the company can prove ROI through benchmarks and establish itself as the context retrieval layer before the market is commoditized, this can become a meaningful commercial product rather than just a useful open-source utility.
+`codei` has the potential to become an important developer infrastructure layer in AI-native software development. If the company can prove ROI through benchmarks and establish itself as the context retrieval layer before the market is commoditized, this can become a meaningful commercial product rather than just a useful open-source utility.

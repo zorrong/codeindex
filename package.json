@@ -1,11 +1,11 @@
 {
-  "name": "codeindex",
+  "name": "codei",
   "version": "0.1.0",
   "private": true,
   "description": "Vectorless, reasoning-based code index for AI context retrieval",
   "scripts": {
     "build": "pnpm -r build",
-    "dev": "pnpm --filter @codeindex/cli dev",
+    "dev": "pnpm --filter @codei/cli dev",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "pnpm -r lint",

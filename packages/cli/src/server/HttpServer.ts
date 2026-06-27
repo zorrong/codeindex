@@ -11,16 +11,16 @@
 
 import * as http from "http"
 import * as path from "path"
-import { FileSystemIndexStore, Retriever, TraversalCache } from "@codeindex/core"
-import type { LLMClient } from "@codeindex/core"
-import type { CodeIndexConfig } from "../config.js"
+import { FileSystemIndexStore, Retriever, TraversalCache } from "@codei/core"
+import type { LLMClient } from "@codei/core"
+import type { CodeiConfig } from "../config.js"
 import { createIndexManager } from "../createServices.js"
 
 export interface HttpServerOptions {
   port?: number
   host?: string
   projectRoot: string
-  config: CodeIndexConfig
+  config: CodeiConfig
   llmClient: LLMClient
 }
 
@@ -28,7 +28,7 @@ export class HttpServer {
   private readonly port: number
   private readonly host: string
   private readonly projectRoot: string
-  private readonly config: CodeIndexConfig
+  private readonly config: CodeiConfig
   private readonly llmClient: LLMClient
   private server: http.Server | null = null
   private readonly traversalCache: TraversalCache

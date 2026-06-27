@@ -32,7 +32,7 @@ importers:
 
   packages/adapter-cpp:
     dependencies:
-      '@codeindex/core':
+      '@codei/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -42,7 +42,7 @@ importers:
 
   packages/adapter-csharp:
     dependencies:
-      '@codeindex/core':
+      '@codei/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -52,7 +52,7 @@ importers:
 
   packages/adapter-go:
     dependencies:
-      '@codeindex/core':
+      '@codei/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -62,7 +62,7 @@ importers:
 
   packages/adapter-java:
     dependencies:
-      '@codeindex/core':
+      '@codei/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -72,7 +72,7 @@ importers:
 
   packages/adapter-php:
     dependencies:
-      '@codeindex/core':
+      '@codei/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -82,7 +82,7 @@ importers:
 
   packages/adapter-python:
     dependencies:
-      '@codeindex/core':
+      '@codei/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -92,7 +92,7 @@ importers:
 
   packages/adapter-rust:
     dependencies:
-      '@codeindex/core':
+      '@codei/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -102,7 +102,7 @@ importers:
 
   packages/adapter-swift:
     dependencies:
-      '@codeindex/core':
+      '@codei/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -112,7 +112,7 @@ importers:
 
   packages/adapter-typescript:
     dependencies:
-      '@codeindex/core':
+      '@codei/core':
         specifier: workspace:*
         version: link:../core
       ignore:
@@ -128,34 +128,34 @@ importers:
 
   packages/cli:
     dependencies:
-      '@codeindex/adapter-cpp':
+      '@codei/adapter-cpp':
         specifier: workspace:*
         version: link:../adapter-cpp
-      '@codeindex/adapter-csharp':
+      '@codei/adapter-csharp':
         specifier: workspace:*
         version: link:../adapter-csharp
-      '@codeindex/adapter-go':
+      '@codei/adapter-go':
         specifier: workspace:*
         version: link:../adapter-go
-      '@codeindex/adapter-java':
+      '@codei/adapter-java':
         specifier: workspace:*
         version: link:../adapter-java
-      '@codeindex/adapter-php':
+      '@codei/adapter-php':
         specifier: workspace:*
         version: link:../adapter-php
-      '@codeindex/adapter-python':
+      '@codei/adapter-python':
         specifier: workspace:*
         version: link:../adapter-python
-      '@codeindex/adapter-rust':
+      '@codei/adapter-rust':
         specifier: workspace:*
         version: link:../adapter-rust
-      '@codeindex/adapter-swift':
+      '@codei/adapter-swift':
         specifier: workspace:*
         version: link:../adapter-swift
-      '@codeindex/adapter-typescript':
+      '@codei/adapter-typescript':
         specifier: workspace:*
         version: link:../adapter-typescript
-      '@codeindex/core':
+      '@codei/core':
         specifier: workspace:*
         version: link:../core
       commander:

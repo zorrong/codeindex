@@ -1,8 +1,8 @@
 import type { Command } from "commander"
 import * as path from "path"
-import { type CodeIndexConfig, inspectConfig, resolveApiKey } from "../config.js"
+import { type CodeiConfig, inspectConfig, resolveApiKey } from "../config.js"
 
-function formatValue(key: keyof CodeIndexConfig, value: unknown): string {
+function formatValue(key: keyof CodeiConfig, value: unknown): string {
   if (value === undefined || value === null || value === "") {
     return "(unset)"
   }
@@ -23,8 +23,8 @@ export function registerDoctorCommand(program: Command): void {
     .action((targetPath: string | undefined, options: Record<string, string | boolean>) => {
       const projectRoot = path.resolve(targetPath ?? ".")
 
-      const overrides: Partial<CodeIndexConfig> = {}
-      if (options["provider"]) overrides.provider = options["provider"] as CodeIndexConfig["provider"]
+      const overrides: Partial<CodeiConfig> = {}
+      if (options["provider"]) overrides.provider = options["provider"] as CodeiConfig["provider"]
       if (options["model"]) overrides.model = options["model"] as string
       if (options["indexDir"]) overrides.indexDir = options["indexDir"] as string
 
@@ -45,7 +45,7 @@ export function registerDoctorCommand(program: Command): void {
       console.log(`   Global dir : ${debug.globalConfigDir}`)
       console.log("")
 
-      const orderedKeys: Array<keyof CodeIndexConfig> = [
+      const orderedKeys: Array<keyof CodeiConfig> = [
         "provider",
         "model",
         "apiKey",

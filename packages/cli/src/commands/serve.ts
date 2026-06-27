@@ -4,7 +4,7 @@
 
 import type { Command } from "commander"
 import * as path from "path"
-import { type CodeIndexConfig, loadConfig, resolveApiKey } from "../config.js"
+import { type CodeiConfig, loadConfig, resolveApiKey } from "../config.js"
 import { createLLMClient, createNoopLLMClient } from "../createServices.js"
 import { HttpServer } from "../server/HttpServer.js"
 
@@ -22,7 +22,7 @@ export function registerServeCommand(program: Command): void {
       const port = parseInt(options["port"] as string ?? "3131")
       const host = (options["host"] as string) ?? "127.0.0.1"
 
-      const overrides: Partial<CodeIndexConfig> = {}
+      const overrides: Partial<CodeiConfig> = {}
       if (options["indexDir"]) overrides.indexDir = options["indexDir"] as string
       if (options["summaryMode"]) overrides.summaryMode = options["summaryMode"] as any
       if (options["verbose"]) overrides.verbose = options["verbose"] as boolean
@@ -46,13 +46,13 @@ export function registerServeCommand(program: Command): void {
       try {
         await server.start()
         if (host !== "127.0.0.1" && host !== "localhost" && !config.serverApiKey) {
-          console.warn(`Warning: server is bound to "${host}" without CODEINDEX_SERVER_API_KEY`)
+          console.warn(`Warning: server is bound to "${host}" without CODEI_SERVER_API_KEY`)
         }
         console.log(`🚀 codei server running at http://${host}:${port}`)
         console.log(`   Project: ${projectRoot}`)
         console.log(`   Index  : ${config.indexDir}/`)
         if (config.serverApiKey) {
-          console.log(`   Auth   : enabled (CODEINDEX_SERVER_API_KEY)`)
+          console.log(`   Auth   : enabled (CODEI_SERVER_API_KEY)`)
         } else {
           console.log(`   Auth   : disabled`)
         }

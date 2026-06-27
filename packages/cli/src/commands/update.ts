@@ -4,7 +4,7 @@
 
 import type { Command } from "commander"
 import * as path from "path"
-import { type CodeIndexConfig, loadConfig } from "../config.js"
+import { type CodeiConfig, loadConfig } from "../config.js"
 import { createIndexManager, createLLMClient, createNoopLLMClient } from "../createServices.js"
 
 export function registerUpdateCommand(program: Command): void {
@@ -17,7 +17,7 @@ export function registerUpdateCommand(program: Command): void {
     .action(async (targetPath: string | undefined, options: Record<string, string | boolean>) => {
       const projectRoot = path.resolve(targetPath ?? ".")
 
-      const overrides: Partial<CodeIndexConfig> = {}
+      const overrides: Partial<CodeiConfig> = {}
       if (options["indexDir"]) overrides.indexDir = options["indexDir"] as string
       if (options["summaryMode"]) overrides.summaryMode = options["summaryMode"] as any
       if (options["verbose"]) overrides.verbose = options["verbose"] as boolean

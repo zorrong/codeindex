@@ -1,6 +1,6 @@
-# @codeindex/core
+# @codei/core
 
-**Core engine for codeindex** — Tree index, retrieval logic, and interfaces.
+**Core engine for codei** — Tree index, retrieval logic, and interfaces.
 
 ## What is this?
 
@@ -13,7 +13,7 @@ The core package provides:
 ## Usage
 
 ```typescript
-import { IndexManager, TreeTraversal } from "@codeindex/core"
+import { IndexManager, TreeTraversal } from "@codei/core"
 
 const manager = new IndexManager({
   projectRoot: "/path/to/project",
@@ -42,4 +42,4 @@ interface LanguageAdapter {
 
 ## License
 
-MIT — See [main repo](https://github.com/zorrong/codeindex)
+MIT — See [main repo](https://github.com/zorrong/codei)

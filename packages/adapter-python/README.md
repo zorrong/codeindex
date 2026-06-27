@@ -1,6 +1,6 @@
-# @codeindex/adapter-python
+# @codei/adapter-python
 
-**Python language adapter for codeindex** — Parses Python source for symbols and imports.
+**Python language adapter for codei** — Parses Python source for symbols and imports.
 
 ## Supported Extensions
 
@@ -8,18 +8,18 @@
 
 ## What It Does
 
-- Extracts top-level symbols for `codeindex`
+- Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
+- Fits the standard `LanguageAdapter` interface used by `@codei/core`
 
 ## Usage
 
 ```typescript
-import { PythonAdapter } from "@codeindex/adapter-python"
+import { PythonAdapter } from "@codei/adapter-python"
 
 const adapter = new PythonAdapter()
 ```
 
 ## License
 
-MIT — See [main repo](https://github.com/zorrong/codeindex)
+MIT — See [main repo](https://github.com/zorrong/codei)

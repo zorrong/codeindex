@@ -1,6 +1,6 @@
-# @codeindex/adapter-rust
+# @codei/adapter-rust
 
-**Rust language adapter for codeindex** — Parses Rust items, modules, and functions.
+**Rust language adapter for codei** — Parses Rust items, modules, and functions.
 
 ## Supported Extensions
 
@@ -8,18 +8,18 @@
 
 ## What It Does
 
-- Extracts top-level symbols for `codeindex`
+- Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
+- Fits the standard `LanguageAdapter` interface used by `@codei/core`
 
 ## Usage
 
 ```typescript
-import { RustAdapter } from "@codeindex/adapter-rust"
+import { RustAdapter } from "@codei/adapter-rust"
 
 const adapter = new RustAdapter()
 ```
 
 ## License
 
-MIT — See [main repo](https://github.com/zorrong/codeindex)
+MIT — See [main repo](https://github.com/zorrong/codei)

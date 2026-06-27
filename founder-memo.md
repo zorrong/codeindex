@@ -1,7 +1,7 @@
 # Founder Memo: Codeindex
 
 ## Thesis
-`codeindex` là lớp context infrastructure cho AI coding agents. Sản phẩm này giúp agent truy xuất đúng phần codebase cần thiết với ít token hơn, từ đó giảm chi phí AI và tăng độ chính xác trên repo thực tế.
+`codei` là lớp context infrastructure cho AI coding agents. Sản phẩm này giúp agent truy xuất đúng phần codebase cần thiết với ít token hơn, từ đó giảm chi phí AI và tăng độ chính xác trên repo thực tế.
 
 ## Problem
 AI agents hiện gặp một điểm nghẽn cơ bản: chúng không thiếu intelligence, chúng thiếu context retrieval đủ tốt.
@@ -14,9 +14,9 @@ Khi làm việc với codebase thật, agent thường:
 Kết quả là team đang dùng AI coding nhiều sẽ gặp hai vấn đề cùng lúc: agent đắt hơn kỳ vọng và kém reliable hơn kỳ vọng.
 
 ## Solution
-`codeindex` index codebase theo cấu trúc và dùng reasoning để trả về một context pack ngắn, liên quan, và dùng được ngay cho agent.
+`codei` index codebase theo cấu trúc và dùng reasoning để trả về một context pack ngắn, liên quan, và dùng được ngay cho agent.
 
-Thay vì dump cả repo vào prompt, `codeindex` giúp agent lấy:
+Thay vì dump cả repo vào prompt, `codei` giúp agent lấy:
 - đúng symbol
 - đúng dependency chain
 - đúng file liên quan
@@ -47,7 +47,7 @@ ICP ban đầu:
 Đây không phải tool cho mọi developer ở giai đoạn đầu. Đây là tool cho những team đã có pain đủ mạnh để trả tiền cho độ chính xác và hiệu quả.
 
 ## Product Strategy
-`codeindex` nên đi theo hướng devtool infrastructure, không phải chỉ là một CLI utility.
+`codei` nên đi theo hướng devtool infrastructure, không phải chỉ là một CLI utility.
 
 Các lớp sản phẩm hợp lý:
 - local CLI cho cá nhân
@@ -65,7 +65,7 @@ Khác biệt không nằm ở việc “có search”, mà ở:
 - privacy và local-first deployment
 - multi-agent, multi-client compatibility
 
-Nếu làm đúng, `codeindex` trở thành lớp ROI rõ ràng trong AI coding stack: dùng ít token hơn để làm được nhiều task đúng hơn.
+Nếu làm đúng, `codei` trở thành lớp ROI rõ ràng trong AI coding stack: dùng ít token hơn để làm được nhiều task đúng hơn.
 
 ## Business Model
 Các hướng thương mại hóa khả thi:
@@ -86,7 +86,7 @@ Khách hàng không mua “index”. Họ mua:
 - Dễ bị nhìn như utility nếu không khóa được workflow must-have
 
 ## What Must Be True
-Để trở thành business thật, `codeindex` phải chứng minh được:
+Để trở thành business thật, `codei` phải chứng minh được:
 - token spend giảm rõ rệt
 - task success rate tăng rõ rệt
 - cài đặt đủ đơn giản để dùng hàng ngày
@@ -100,4 +100,4 @@ Khách hàng không mua “index”. Họ mua:
 5. Siết product positioning quanh thông điệp: context infrastructure for coding agents
 
 ## Bottom Line
-`codeindex` có tiềm năng trở thành một devtool infrastructure quan trọng trong thời kỳ AI-native software development. Nếu công ty chứng minh được ROI bằng benchmark và chiếm được lớp context retrieval trước khi thị trường bị commoditize, đây có thể là một sản phẩm có giá trị thương mại thực sự chứ không chỉ là một OSS utility.
+`codei` có tiềm năng trở thành một devtool infrastructure quan trọng trong thời kỳ AI-native software development. Nếu công ty chứng minh được ROI bằng benchmark và chiếm được lớp context retrieval trước khi thị trường bị commoditize, đây có thể là một sản phẩm có giá trị thương mại thực sự chứ không chỉ là một OSS utility.

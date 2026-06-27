@@ -1,6 +1,6 @@
 # API Reference
 
-> Brand note: `codei` is the new product and CLI name for `Codeindex`. The `i` stands for both `index` and `intelligent` context retrieval. The npm package scope remains `@codeindex/*` for compatibility.
+> Brand note: `codei` is the new product and CLI name for `Codeindex`. The `i` stands for both `index` and `intelligent` context retrieval. The published CLI package is `@codei/cli`, while the core and adapter packages remain under `@codei/*`.
 
 ## HTTP Server
 
@@ -202,10 +202,10 @@ Optional per-project override configuration.
 
 ```env
 NVIDIA_API_KEY=nvapi-...
-CODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1
+CODEI_BASE_URL=https://integrate.api.nvidia.com/v1
 # Optional:
-# CODEINDEX_PROVIDER=nvidia
-# CODEINDEX_MODEL=minimaxai/minimax-m3
+# CODEI_PROVIDER=nvidia
+# CODEI_MODEL=minimaxai/minimax-m3
 ```
 
 If `NVIDIA_API_KEY` or the NVIDIA base URL is present, `codei` can infer the NVIDIA provider automatically.
@@ -215,10 +215,10 @@ If `NVIDIA_API_KEY` or the NVIDIA base URL is present, `codei` can infer the NVI
 Recommended global runtime configuration when you want to run `codei setup` once and reuse it across all projects.
 
 ```env
-CODEINDEX_PROVIDER=nvidia
-CODEINDEX_API_KEY=nvapi-...
-CODEINDEX_MODEL=minimaxai/minimax-m3
-CODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1
+CODEI_PROVIDER=nvidia
+CODEI_API_KEY=nvapi-...
+CODEI_MODEL=minimaxai/minimax-m3
+CODEI_BASE_URL=https://integrate.api.nvidia.com/v1
 ```
 
 ### `~/.codei/config.json`
@@ -244,10 +244,10 @@ Backward-compatible global configuration (also created by `codei setup`).
 | `ANTHROPIC_API_KEY` | Anthropic API key |
 | `GOOGLE_API_KEY` | Google AI API key |
 | `NVIDIA_API_KEY` | NVIDIA API key |
-| `CODEINDEX_PROVIDER` | Override default provider |
-| `CODEINDEX_MODEL` | Override default model |
-| `CODEINDEX_BASE_URL` | Override API base URL |
-| `CODEINDEX_API_KEY` | Override API key |
+| `CODEI_PROVIDER` | Override default provider |
+| `CODEI_MODEL` | Override default model |
+| `CODEI_BASE_URL` | Override API base URL |
+| `CODEI_API_KEY` | Override API key |
 
 ## Index Output Files
 
@@ -267,7 +267,7 @@ When indexing, `codei` writes:
 ### IndexManager
 
 ```typescript
-import { IndexManager } from "@codeindex/core"
+import { IndexManager } from "@codei/core"
 
 const manager = new IndexManager({
   projectRoot: "/path/to/project",
@@ -294,7 +294,7 @@ manager.watch({
 ### TreeTraversal
 
 ```typescript
-import { TreeTraversal } from "@codeindex/core"
+import { TreeTraversal } from "@codei/core"
 
 const traversal = new TreeTraversal({
   tree,

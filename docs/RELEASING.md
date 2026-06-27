@@ -1,10 +1,10 @@
-# Releasing codeindex
+# Releasing codei
 
 This repo is a `pnpm` workspace monorepo. Public npm packages live in `packages/*` and are published in dependency order:
 
-1. `@codeindex/core`
+1. `@codei/core`
 2. language adapters
-3. `@codeindex/cli`
+3. `@codei/cli`
 
 ## Pre-release Checklist
 
@@ -65,8 +65,8 @@ pnpm run release:publish
 ## Notes
 
 - The GitHub workflow at `.github/workflows/release.yml` uses `changesets/action` to open or update a release PR automatically on `main`.
-- To enable npm publishing from GitHub Actions, add an `NPM_TOKEN` repository secret with publish access to the `@codeindex` scope.
+- To enable npm publishing from GitHub Actions, add an `NPM_TOKEN` repository secret with publish access to the `@codeindex` scope and the `@codei` scope.
 - `release:publish` runs `release:check` first.
-- Packages are published in topological dependency order so `@codeindex/core` is available before adapters and CLI.
+- Packages are published in topological dependency order so `@codei/core` is available before adapters and `@codei/cli`.
 - The website package is private and is not part of npm publishing.
 - CI also runs `pnpm run release:check` on pushes and pull requests to keep npm artifacts healthy.

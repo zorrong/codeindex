@@ -13,7 +13,7 @@ import * as path from "path"
 import * as os from "os"
 import { parse as parseDotenv } from "dotenv"
 
-export interface CodeIndexConfig {
+export interface CodeiConfig {
   /** LLM provider: openai | anthropic | google | nvidia | custom | ollama */
   provider: "openai" | "anthropic" | "google" | "nvidia" | "custom" | "ollama"
   /** Model name */
@@ -48,16 +48,14 @@ export interface ConfigFieldSource {
 export interface ConfigDebugInfo {
   projectRoot: string
   globalConfigDir: string
-  effective: CodeIndexConfig
-  fields: Partial<Record<keyof CodeIndexConfig, ConfigFieldSource>>
+  effective: CodeiConfig
+  fields: Partial<Record<keyof CodeiConfig, ConfigFieldSource>>
 }
 
 const CONFIG_FILE = ".codei.json"
-const LEGACY_CONFIG_FILE = ".codeindex.json"
 const DOTENV_FILE = ".env"
 const DEFAULT_GLOBAL_CONFIG_DIR = path.join(os.homedir(), ".codei")
-const LEGACY_GLOBAL_CONFIG_DIR = path.join(os.homedir(), ".codeindex")
-const PROJECT_LOCAL_CONFIG_KEYS: Array<keyof CodeIndexConfig> = [
+const PROJECT_LOCAL_CONFIG_KEYS: Array<keyof CodeiConfig> = [
   "indexDir",
   "projectName",
   "summaryMode",
@@ -67,14 +65,14 @@ const PROJECT_LOCAL_CONFIG_KEYS: Array<keyof CodeIndexConfig> = [
   "serverMaxBodyBytes",
   "serverRateLimitPerMinute",
 ]
-const GLOBAL_RUNTIME_KEYS: Array<keyof CodeIndexConfig> = [
+const GLOBAL_RUNTIME_KEYS: Array<keyof CodeiConfig> = [
   "provider",
   "model",
   "apiKey",
   "baseURL",
 ]
 
-const PROVIDER_DEFAULTS: Record<string, Partial<CodeIndexConfig>> = {
+const PROVIDER_DEFAULTS: Record<string, Partial<CodeiConfig>> = {
   openai: { model: "gpt-4o" },
   anthropic: { model: "claude-sonnet-4-5" },
   google: { model: "gemini-1.5-flash" },
@@ -96,20 +94,9 @@ function mergeExisting(target: any, source: any) {
 }
 
 function getGlobalConfigDir(): string {
-  const explicit =
-    process.env["CODEI_GLOBAL_DIR"]?.trim() ||
-    process.env["CODEINDEX_GLOBAL_DIR"]?.trim()
+  const explicit = process.env["CODEI_GLOBAL_DIR"]?.trim()
 
   if (explicit) return explicit
-
-  if (fs.existsSync(DEFAULT_GLOBAL_CONFIG_DIR)) return DEFAULT_GLOBAL_CONFIG_DIR
-
-  if (fs.existsSync(LEGACY_GLOBAL_CONFIG_DIR)) {
-    try {
-      fs.renameSync(LEGACY_GLOBAL_CONFIG_DIR, DEFAULT_GLOBAL_CONFIG_DIR)
-    } catch {}
-    return DEFAULT_GLOBAL_CONFIG_DIR
-  }
 
   return DEFAULT_GLOBAL_CONFIG_DIR
 }
@@ -120,16 +107,6 @@ function getGlobalConfigFile(): string {
 
 function getGlobalEnvFile(): string {
   return path.join(getGlobalConfigDir(), DOTENV_FILE)
-}
-
-function migrateProjectConfigFile(projectRoot: string): void {
-  const newPath = path.join(projectRoot, CONFIG_FILE)
-  const legacyPath = path.join(projectRoot, LEGACY_CONFIG_FILE)
-  if (!fs.existsSync(newPath) && fs.existsSync(legacyPath)) {
-    try {
-      fs.renameSync(legacyPath, newPath)
-    } catch {}
-  }
 }
 
 function stripKeys<T extends Record<string, unknown>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
@@ -158,18 +135,18 @@ function loadGlobalEnv(): Record<string, string> {
   return loadEnvFile(getGlobalEnvFile())
 }
 
-function readGlobalConfigFile(): Partial<CodeIndexConfig> {
+function readGlobalConfigFile(): Partial<CodeiConfig> {
   const globalConfigFile = getGlobalConfigFile()
   if (!fs.existsSync(globalConfigFile)) return {}
 
   try {
-    return JSON.parse(fs.readFileSync(globalConfigFile, "utf-8")) as Partial<CodeIndexConfig>
+    return JSON.parse(fs.readFileSync(globalConfigFile, "utf-8")) as Partial<CodeiConfig>
   } catch {
     return {}
   }
 }
 
-function getProviderApiKeyEnvMap(): Record<CodeIndexConfig["provider"], string | undefined> {
+function getProviderApiKeyEnvMap(): Record<CodeiConfig["provider"], string | undefined> {
   return {
     openai: "OPENAI_API_KEY",
     anthropic: "ANTHROPIC_API_KEY",
@@ -182,12 +159,12 @@ function getProviderApiKeyEnvMap(): Record<CodeIndexConfig["provider"], string |
 
 function inferProviderFromEnv(
   env: Record<string, string>,
-  fallback: CodeIndexConfig["provider"]
-): CodeIndexConfig["provider"] {
-  const explicitProvider = env["CODEINDEX_PROVIDER"] as CodeIndexConfig["provider"] | undefined
+  fallback: CodeiConfig["provider"]
+): CodeiConfig["provider"] {
+  const explicitProvider = env["CODEI_PROVIDER"] as CodeiConfig["provider"] | undefined
   if (explicitProvider) return explicitProvider
 
-  const baseURL = env["CODEINDEX_BASE_URL"]?.trim().toLowerCase()
+  const baseURL = env["CODEI_BASE_URL"]?.trim().toLowerCase()
   if (env["NVIDIA_API_KEY"] || baseURL?.includes("integrate.api.nvidia.com")) return "nvidia"
   if (env["ANTHROPIC_API_KEY"]) return "anthropic"
   if (env["GOOGLE_API_KEY"]) return "google"
@@ -199,31 +176,31 @@ function inferProviderFromEnv(
 
 function extractEnvConfig(
   env: Record<string, string>,
-  fallbackProvider: CodeIndexConfig["provider"]
+  fallbackProvider: CodeiConfig["provider"]
 ): {
-  config: Partial<CodeIndexConfig>
-  fieldKeys: Partial<Record<keyof CodeIndexConfig, string>>
+  config: Partial<CodeiConfig>
+  fieldKeys: Partial<Record<keyof CodeiConfig, string>>
 } {
-  const config: Partial<CodeIndexConfig> = {}
-  const fieldKeys: Partial<Record<keyof CodeIndexConfig, string>> = {}
+  const config: Partial<CodeiConfig> = {}
+  const fieldKeys: Partial<Record<keyof CodeiConfig, string>> = {}
 
   if (Object.keys(env).length === 0) {
     return { config, fieldKeys }
   }
 
-  const explicitProvider = env["CODEINDEX_PROVIDER"] as CodeIndexConfig["provider"] | undefined
-  const baseURL = env["CODEINDEX_BASE_URL"]?.trim().toLowerCase()
+  const explicitProvider = env["CODEI_PROVIDER"] as CodeiConfig["provider"] | undefined
+  const baseURL = env["CODEI_BASE_URL"]?.trim().toLowerCase()
   let effectiveProvider = fallbackProvider
 
   if (explicitProvider) {
     effectiveProvider = explicitProvider
     config.provider = explicitProvider
-    fieldKeys.provider = "CODEINDEX_PROVIDER"
+    fieldKeys.provider = "CODEI_PROVIDER"
   } else if (env["NVIDIA_API_KEY"] || baseURL?.includes("integrate.api.nvidia.com")) {
     effectiveProvider = "nvidia"
     if (effectiveProvider !== fallbackProvider) {
       config.provider = effectiveProvider
-      fieldKeys.provider = env["NVIDIA_API_KEY"] ? "NVIDIA_API_KEY" : "CODEINDEX_BASE_URL"
+      fieldKeys.provider = env["NVIDIA_API_KEY"] ? "NVIDIA_API_KEY" : "CODEI_BASE_URL"
     }
   } else if (env["ANTHROPIC_API_KEY"]) {
     effectiveProvider = "anthropic"
@@ -252,51 +229,51 @@ function extractEnvConfig(
   }
 
   const providerApiKeyEnv = getProviderApiKeyEnvMap()[effectiveProvider]
-  if (env["CODEINDEX_API_KEY"]) {
-    config.apiKey = env["CODEINDEX_API_KEY"]
-    fieldKeys.apiKey = "CODEINDEX_API_KEY"
+  if (env["CODEI_API_KEY"]) {
+    config.apiKey = env["CODEI_API_KEY"]
+    fieldKeys.apiKey = "CODEI_API_KEY"
   } else if (providerApiKeyEnv && env[providerApiKeyEnv]) {
     config.apiKey = env[providerApiKeyEnv]
     fieldKeys.apiKey = providerApiKeyEnv
   }
 
-  if (env["CODEINDEX_MODEL"]) {
-    config.model = env["CODEINDEX_MODEL"]
-    fieldKeys.model = "CODEINDEX_MODEL"
+  if (env["CODEI_MODEL"]) {
+    config.model = env["CODEI_MODEL"]
+    fieldKeys.model = "CODEI_MODEL"
   }
-  if (env["CODEINDEX_BASE_URL"]) {
-    config.baseURL = env["CODEINDEX_BASE_URL"]
-    fieldKeys.baseURL = "CODEINDEX_BASE_URL"
+  if (env["CODEI_BASE_URL"]) {
+    config.baseURL = env["CODEI_BASE_URL"]
+    fieldKeys.baseURL = "CODEI_BASE_URL"
   }
-  if (env["CODEINDEX_SERVER_API_KEY"]) {
-    config.serverApiKey = env["CODEINDEX_SERVER_API_KEY"]
-    fieldKeys.serverApiKey = "CODEINDEX_SERVER_API_KEY"
+  if (env["CODEI_SERVER_API_KEY"]) {
+    config.serverApiKey = env["CODEI_SERVER_API_KEY"]
+    fieldKeys.serverApiKey = "CODEI_SERVER_API_KEY"
   }
-  if (env["CODEINDEX_SERVER_CORS_ORIGIN"]) {
-    config.serverCorsOrigin = env["CODEINDEX_SERVER_CORS_ORIGIN"]
-    fieldKeys.serverCorsOrigin = "CODEINDEX_SERVER_CORS_ORIGIN"
+  if (env["CODEI_SERVER_CORS_ORIGIN"]) {
+    config.serverCorsOrigin = env["CODEI_SERVER_CORS_ORIGIN"]
+    fieldKeys.serverCorsOrigin = "CODEI_SERVER_CORS_ORIGIN"
   }
 
-  if (env["CODEINDEX_SERVER_MAX_BODY_BYTES"]) {
-    const v = parseInt(env["CODEINDEX_SERVER_MAX_BODY_BYTES"], 10)
+  if (env["CODEI_SERVER_MAX_BODY_BYTES"]) {
+    const v = parseInt(env["CODEI_SERVER_MAX_BODY_BYTES"], 10)
     if (Number.isFinite(v)) {
       config.serverMaxBodyBytes = v
-      fieldKeys.serverMaxBodyBytes = "CODEINDEX_SERVER_MAX_BODY_BYTES"
+      fieldKeys.serverMaxBodyBytes = "CODEI_SERVER_MAX_BODY_BYTES"
     }
   }
 
-  if (env["CODEINDEX_SERVER_RATE_LIMIT_PER_MINUTE"]) {
-    const v = parseInt(env["CODEINDEX_SERVER_RATE_LIMIT_PER_MINUTE"], 10)
+  if (env["CODEI_SERVER_RATE_LIMIT_PER_MINUTE"]) {
+    const v = parseInt(env["CODEI_SERVER_RATE_LIMIT_PER_MINUTE"], 10)
     if (Number.isFinite(v)) {
       config.serverRateLimitPerMinute = v
-      fieldKeys.serverRateLimitPerMinute = "CODEINDEX_SERVER_RATE_LIMIT_PER_MINUTE"
+      fieldKeys.serverRateLimitPerMinute = "CODEI_SERVER_RATE_LIMIT_PER_MINUTE"
     }
   }
 
   return { config, fieldKeys }
 }
 
-function applyEnvConfig(merged: CodeIndexConfig, env: Record<string, string>): void {
+function applyEnvConfig(merged: CodeiConfig, env: Record<string, string>): void {
   if (Object.keys(env).length === 0) return
 
   const inferredProvider = inferProviderFromEnv(env, merged.provider)
@@ -311,12 +288,10 @@ function applyEnvConfig(merged: CodeIndexConfig, env: Record<string, string>): v
 
 export function loadConfig(
   projectRoot: string,
-  overrides: Partial<CodeIndexConfig> = {}
-): CodeIndexConfig {
-  migrateProjectConfigFile(projectRoot)
-
+  overrides: Partial<CodeiConfig> = {}
+): CodeiConfig {
   // Base defaults
-  const merged: CodeIndexConfig = {
+  const merged: CodeiConfig = {
     provider: "openai",
     model: "gpt-4o",
     apiKey: "",
@@ -331,8 +306,8 @@ export function loadConfig(
   // Tự migrate config toàn cục cũ sang ~/.codei/.env để lần sau dùng ổn định.
   if (Object.keys(globalEnv).length === 0 && Object.keys(globalConfig).length > 0) {
     const legacyRuntimeConfig = Object.fromEntries(
-      Object.entries(globalConfig).filter(([key]) => GLOBAL_RUNTIME_KEYS.includes(key as keyof CodeIndexConfig))
-    ) as Partial<CodeIndexConfig>
+      Object.entries(globalConfig).filter(([key]) => GLOBAL_RUNTIME_KEYS.includes(key as keyof CodeiConfig))
+    ) as Partial<CodeiConfig>
 
     if (Object.keys(legacyRuntimeConfig).length > 0) {
       saveGlobalEnv(legacyRuntimeConfig)
@@ -358,7 +333,7 @@ export function loadConfig(
 
       const localConfig = Object.fromEntries(
         Object.entries(fileConfig).filter(([key]) =>
-          PROJECT_LOCAL_CONFIG_KEYS.includes(key as keyof CodeIndexConfig)
+          PROJECT_LOCAL_CONFIG_KEYS.includes(key as keyof CodeiConfig)
         )
       )
 
@@ -387,16 +362,14 @@ export function loadConfig(
 
 export function inspectConfig(
   projectRoot: string,
-  overrides: Partial<CodeIndexConfig> = {}
+  overrides: Partial<CodeiConfig> = {}
 ): ConfigDebugInfo {
-  migrateProjectConfigFile(projectRoot)
-
   const globalConfig = readGlobalConfigFile()
   let globalEnv = loadGlobalEnv()
   if (Object.keys(globalEnv).length === 0 && Object.keys(globalConfig).length > 0) {
     const legacyRuntimeConfig = Object.fromEntries(
-      Object.entries(globalConfig).filter(([key]) => GLOBAL_RUNTIME_KEYS.includes(key as keyof CodeIndexConfig))
-    ) as Partial<CodeIndexConfig>
+      Object.entries(globalConfig).filter(([key]) => GLOBAL_RUNTIME_KEYS.includes(key as keyof CodeiConfig))
+    ) as Partial<CodeiConfig>
     if (Object.keys(legacyRuntimeConfig).length > 0) {
       saveGlobalEnv(legacyRuntimeConfig)
       globalEnv = loadGlobalEnv()
@@ -404,7 +377,7 @@ export function inspectConfig(
   }
 
   const effective = loadConfig(projectRoot, overrides)
-  const working: CodeIndexConfig = {
+  const working: CodeiConfig = {
     provider: "openai",
     model: "gpt-4o",
     apiKey: "",
@@ -413,7 +386,7 @@ export function inspectConfig(
     verbose: false,
   }
 
-  const fields: Partial<Record<keyof CodeIndexConfig, ConfigFieldSource>> = {
+  const fields: Partial<Record<keyof CodeiConfig, ConfigFieldSource>> = {
     provider: { source: "default", location: "built-in defaults" },
     model: { source: "default", location: "built-in defaults" },
     apiKey: { source: "default", location: "built-in defaults" },
@@ -423,12 +396,12 @@ export function inspectConfig(
   }
 
   const assignTracked = (
-    patch: Partial<CodeIndexConfig>,
+    patch: Partial<CodeiConfig>,
     source: ConfigFieldSource["source"],
     location: string,
-    keys: Partial<Record<keyof CodeIndexConfig, string>> = {}
+    keys: Partial<Record<keyof CodeiConfig, string>> = {}
   ) => {
-    for (const [key, value] of Object.entries(patch) as Array<[keyof CodeIndexConfig, CodeIndexConfig[keyof CodeIndexConfig]]>) {
+    for (const [key, value] of Object.entries(patch) as Array<[keyof CodeiConfig, CodeiConfig[keyof CodeiConfig]]>) {
       if (value === undefined) continue
       working[key] = value as never
       fields[key] = {
@@ -467,9 +440,9 @@ export function inspectConfig(
       const fileConfig = JSON.parse(fs.readFileSync(projectConfigFile, "utf-8"))
       const localConfig = Object.fromEntries(
         Object.entries(fileConfig).filter(([key]) =>
-          PROJECT_LOCAL_CONFIG_KEYS.includes(key as keyof CodeIndexConfig)
+          PROJECT_LOCAL_CONFIG_KEYS.includes(key as keyof CodeiConfig)
         )
-      ) as Partial<CodeIndexConfig>
+      ) as Partial<CodeiConfig>
       assignTracked(localConfig, "project-config", projectConfigFile)
     } catch {}
   }
@@ -509,7 +482,7 @@ export function inspectConfig(
   }
 }
 
-export function saveGlobalConfig(config: Partial<CodeIndexConfig>): void {
+export function saveGlobalConfig(config: Partial<CodeiConfig>): void {
   const globalConfigDir = getGlobalConfigDir()
   const globalConfigFile = getGlobalConfigFile()
 
@@ -517,7 +490,7 @@ export function saveGlobalConfig(config: Partial<CodeIndexConfig>): void {
     fs.mkdirSync(globalConfigDir, { recursive: true })
   }
   
-  let current: Partial<CodeIndexConfig> = {}
+  let current: Partial<CodeiConfig> = {}
   if (fs.existsSync(globalConfigFile)) {
     try {
       current = JSON.parse(fs.readFileSync(globalConfigFile, "utf-8"))
@@ -532,7 +505,7 @@ function formatEnvValue(value: string): string {
   return /[\s#"'`]/.test(value) ? JSON.stringify(value) : value
 }
 
-export function saveGlobalEnv(config: Partial<CodeIndexConfig>): void {
+export function saveGlobalEnv(config: Partial<CodeiConfig>): void {
   const globalConfigDir = getGlobalConfigDir()
   const globalEnvFile = getGlobalEnvFile()
 
@@ -544,17 +517,17 @@ export function saveGlobalEnv(config: Partial<CodeIndexConfig>): void {
     "# codei global runtime config",
   ]
 
-  if (config.provider) lines.push(`CODEINDEX_PROVIDER=${formatEnvValue(config.provider)}`)
-  if (config.model) lines.push(`CODEINDEX_MODEL=${formatEnvValue(config.model)}`)
-  if (config.baseURL) lines.push(`CODEINDEX_BASE_URL=${formatEnvValue(config.baseURL)}`)
+  if (config.provider) lines.push(`CODEI_PROVIDER=${formatEnvValue(config.provider)}`)
+  if (config.model) lines.push(`CODEI_MODEL=${formatEnvValue(config.model)}`)
+  if (config.baseURL) lines.push(`CODEI_BASE_URL=${formatEnvValue(config.baseURL)}`)
   if (config.apiKey && config.provider !== "ollama") {
-    lines.push(`CODEINDEX_API_KEY=${formatEnvValue(config.apiKey)}`)
+    lines.push(`CODEI_API_KEY=${formatEnvValue(config.apiKey)}`)
   }
 
   fs.writeFileSync(globalEnvFile, lines.join("\n") + "\n", "utf-8")
 }
 
-export function resolveApiKey(config: CodeIndexConfig): string {
+export function resolveApiKey(config: CodeiConfig): string {
   // Ollama không cần key
   if (config.provider === "ollama") return "ollama"
 

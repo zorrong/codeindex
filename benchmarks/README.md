@@ -1,11 +1,11 @@
 # Benchmarks
 
-Bộ benchmark tối thiểu để đo `codeindex` trên repo thực.
+Bộ benchmark tối thiểu để đo `codei` trên repo thực.
 
 ## Mục tiêu
 
 Đo 4 thứ:
-- token output của `codeindex query`
+- token output của `codei query`
 - latency query
 - file/symbol hit rate cơ bản
 - so sánh sơ bộ với full source dump
@@ -13,8 +13,8 @@ Bộ benchmark tối thiểu để đo `codeindex` trên repo thực.
 ## Chuẩn bị repo cần benchmark
 
 Trong repo mục tiêu, cần có:
-- `.codeindex.json`
-- `.index/` đã được build bằng `codeindex index`
+- `.codei.json`
+- `.index/` đã được build bằng `codei index`
 
 ## Tạo file queries
 
@@ -57,7 +57,7 @@ Script sẽ tạo:
 
 ## Chỉ số hiện có
 
-### 1. codeindex tokens
+### 1. codei tokens
 Ước lượng bằng ký tự/4 để có số tương đối, đủ dùng để so sánh.
 
 ### 2. full dump tokens
@@ -67,7 +67,7 @@ Script sẽ tạo:
 Thời gian chạy một query.
 
 ### 4. fileHitRate / symbolHitRate
-Tỷ lệ expected items xuất hiện trong output JSON của `codeindex query --format json`.
+Tỷ lệ expected items xuất hiện trong output JSON của `codei query --format json`.
 
 ## Ghi chú
 

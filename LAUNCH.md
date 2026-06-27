@@ -2,7 +2,7 @@
 
 **Mỗi ngày bạn paste code vào ChatGPT, bạn đang đốt tiền cho những context không liên quan.**
 
-> Ghi chú thương hiệu: `codei` là tên mới của `Codeindex`. Chữ `i` đại diện cho cả `index` và `intelligent`. CLI dùng tên `codei`, còn npm package scope vẫn là `@codeindex/*` để giữ tương thích.
+> Ghi chú thương hiệu: `codei` là tên mới của `Codeindex`. Chữ `i` đại diện cho cả `index` và `intelligent`. Lệnh CLI là `codei`, gói npm để cài CLI là `@codei/cli`, còn core/adapters vẫn giữ dưới `@codei/*`.
 
 ***
 
@@ -76,7 +76,7 @@ After:  Paste 3 files (2KB)   → Cùng câu trả lời
 
 ```bash
 # 1. Cài đặt
-npm install -g @codeindex/cli
+npm install -g @codei/cli
 
 # 2. Setup (một lần)
 codei setup
@@ -103,7 +103,7 @@ codei query "Authentication hoạt động thế nào?"
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    codeindex Index                            │
+│                    codei Index                                │
 │                                                              │
 │   Project                                                     │
 │   └── src/                                                    │
@@ -155,9 +155,9 @@ TypeScript • Python • Go • Rust • Java • C# • C++ • PHP • Swift
 
 MIT License — Sử dụng tự do, kể cả trong dự án thương mại.
 
-**GitHub:** <https://github.com/zorrong/codeindex>
+**GitHub:** <https://github.com/zorrong/codei>
 
-**Website:** <https://zorrong.github.io/codeindex>\
+**Website:** <https://zorrong.github.io/codei>\
 Vercel: 
 
 **ủng hộ:** <https://paypal.me/zorrong> ☕
@@ -166,11 +166,11 @@ Vercel: 
 
 ## Kết luận
 
-`codeindex` giúp bạn:
+`codei` giúp bạn:
 
 1. **Tiết kiệm 95% tokens** cho mỗi query
 2. **Không cần external services** — chạy 100% local
 3. **Tích hợp mọi IDE** — VSCode, JetBrains, Neovim, Claude, Cursor
 4. **Hỗ trợ 9 ngôn ngữ** phổ biến
 
-**Ngừng trả tiền cho context không cần thiết. Bắt đầu dùng codeindex.**
+**Ngừng trả tiền cho context không cần thiết. Bắt đầu dùng codei.**

@@ -4,7 +4,7 @@
 
 import type { Command } from "commander"
 import * as path from "path"
-import { type CodeIndexConfig, loadConfig } from "../config.js"
+import { type CodeiConfig, loadConfig } from "../config.js"
 import { createIndexManager, createLLMClient, createNoopLLMClient } from "../createServices.js"
 
 export function registerIndexCommand(program: Command): void {
@@ -21,7 +21,7 @@ export function registerIndexCommand(program: Command): void {
       const projectRoot = path.resolve(targetPath ?? ".")
 
       // Chỉ lấy overrides từ CLI nếu nó được cung cấp
-      const overrides: Partial<CodeIndexConfig> = {}
+      const overrides: Partial<CodeiConfig> = {}
       if (options["provider"]) overrides.provider = options["provider"] as any
       if (options["model"]) overrides.model = options["model"] as string
       if (options["indexDir"]) overrides.indexDir = options["indexDir"] as string

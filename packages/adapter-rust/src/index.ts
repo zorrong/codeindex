@@ -1,5 +1,5 @@
 /**
- * @codeindex/adapter-rust — Rust language adapter entry point.
+ * @codei/adapter-rust — Rust language adapter entry point.
  */
 
 export { RustAdapter } from "./RustAdapter.js"

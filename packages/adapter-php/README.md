@@ -1,6 +1,6 @@
-# @codeindex/adapter-php
+# @codei/adapter-php
 
-**PHP language adapter for codeindex** — Parses PHP namespaces, classes, methods, and properties.
+**PHP language adapter for codei** — Parses PHP namespaces, classes, methods, and properties.
 
 ## Supported Extensions
 
@@ -8,18 +8,18 @@
 
 ## What It Does
 
-- Extracts top-level symbols for `codeindex`
+- Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
+- Fits the standard `LanguageAdapter` interface used by `@codei/core`
 
 ## Usage
 
 ```typescript
-import { PhpAdapter } from "@codeindex/adapter-php"
+import { PhpAdapter } from "@codei/adapter-php"
 
 const adapter = new PhpAdapter()
 ```
 
 ## License
 
-MIT — See [main repo](https://github.com/zorrong/codeindex)
+MIT — See [main repo](https://github.com/zorrong/codei)

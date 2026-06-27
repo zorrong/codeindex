@@ -1,6 +1,6 @@
-# @codeindex/adapter-csharp
+# @codei/adapter-csharp
 
-**C# language adapter for codeindex** — Parses C# types, methods, constructors, and properties.
+**C# language adapter for codei** — Parses C# types, methods, constructors, and properties.
 
 ## Supported Extensions
 
@@ -8,18 +8,18 @@
 
 ## What It Does
 
-- Extracts top-level symbols for `codeindex`
+- Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
+- Fits the standard `LanguageAdapter` interface used by `@codei/core`
 
 ## Usage
 
 ```typescript
-import { CSharpAdapter } from "@codeindex/adapter-csharp"
+import { CSharpAdapter } from "@codei/adapter-csharp"
 
 const adapter = new CSharpAdapter()
 ```
 
 ## License
 
-MIT — See [main repo](https://github.com/zorrong/codeindex)
+MIT — See [main repo](https://github.com/zorrong/codei)

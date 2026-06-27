@@ -1,6 +1,6 @@
-# codeindex — Strategic Roadmap 🚀
+# codei — Strategic Roadmap 🚀
 
-This roadmap outlines the long-term vision to scale `codeindex` into a professional AI context retrieval engine.
+This roadmap outlines the long-term vision to scale `codei` into a professional AI context retrieval engine.
 
 ---
 
@@ -15,7 +15,7 @@ This roadmap outlines the long-term vision to scale `codeindex` into a professio
 
 ## 🟡 Phase 2: Ecosystem & Better Integration (The Connectivity Phase)
 
-- [ ] **Native MCP (Model Context Protocol) Support**: Build an official MCP server for `codeindex` to enable "plug-and-play" integration with Claude Desktop, Cursor, and Windsurf without needing custom scripts.
+- [ ] **Native MCP (Model Context Protocol) Support**: Build an official MCP server for `codei` to enable "plug-and-play" integration with Claude Desktop, Cursor, and Windsurf without needing custom scripts.
 - [ ] **Official VS Code Extension**: A sidebar to visualize the index tree and a status bar to monitor the local server.
 - [ ] **CI/CD Integration**: Official GitHub Action and GitLab Runner scripts for auto-indexing on merge.
 

@@ -1,5 +1,5 @@
 /**
- * @codeindex/adapter-go — Go language adapter entry point.
+ * @codei/adapter-go — Go language adapter entry point.
  */
 
 export { GoAdapter } from "./GoAdapter.js"

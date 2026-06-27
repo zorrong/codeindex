@@ -1,5 +1,5 @@
 /**
- * @codeindex/adapter-swift — Swift language adapter entry point.
+ * @codei/adapter-swift — Swift language adapter entry point.
  */
 
 export { SwiftAdapter } from "./SwiftAdapter.js"

@@ -4,7 +4,7 @@
 
 > Every time you paste your codebase to ChatGPT or Claude, you're burning tokens. `codei` gives AI exactly the context it needs — nothing more.
 
-> Brand note: `codei` is the new product name for `Codeindex`. The `i` stands for both `index` and `intelligent` context retrieval. The CLI is `codei`, while the npm package scope remains `@codeindex/*` for compatibility.
+> Brand note: `codei` is the new product name for `Codeindex`. The `i` stands for both `index` and `intelligent` context retrieval. The CLI command is `codei`, the npm package is `@codei/cli`, and the core/adapter packages remain under `@codei/*`.
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat\&logo=typescript\&logoColor=white)
@@ -70,7 +70,7 @@ After:  Paste 3 files (2KB)   → Same answer
 
 ```bash
 # 1. Install
-pnpm install -g @codeindex/cli
+pnpm install -g @codei/cli
 
 # 2. Setup once globally
 codei setup
@@ -91,7 +91,7 @@ For NVIDIA, a minimal global env looks like:
 
 ```env
 NVIDIA_API_KEY=nvapi-...
-CODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1
+CODEI_BASE_URL=https://integrate.api.nvidia.com/v1
 ```
 
 **That's it.** Run setup once, then `codei index` works across projects.

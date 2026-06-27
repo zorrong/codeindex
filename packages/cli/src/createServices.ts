@@ -3,11 +3,11 @@
  * Shared bởi tất cả CLI commands.
  */
 
-import type { LLMClient, LanguageAdapter } from "@codeindex/core"
-import { IndexManager } from "@codeindex/core"
-import { TypeScriptAdapter } from "@codeindex/adapter-typescript"
+import type { LLMClient, LanguageAdapter } from "@codei/core"
+import { IndexManager } from "@codei/core"
+import { TypeScriptAdapter } from "@codei/adapter-typescript"
 import { OpenAILLMClient, AnthropicLLMClient, GoogleLLMClient } from "./llm/LLMClients.js"
-import { type CodeIndexConfig, resolveApiKey } from "./config.js"
+import { type CodeiConfig, resolveApiKey } from "./config.js"
 
 // Tất cả adapters — mỗi adapter đăng ký extensions riêng
 async function loadAllAdapters(verbose = false): Promise<LanguageAdapter[]> {
@@ -17,14 +17,14 @@ async function loadAllAdapters(verbose = false): Promise<LanguageAdapter[]> {
 
   // Dynamic import các adapters khác (safe fallback nếu chưa build)
   const optionalAdapters: Array<{ load: () => Promise<LanguageAdapter>; name: string }> = [
-    { name: "python", load: async () => { const { PythonAdapter } = await import("@codeindex/adapter-python"); return new PythonAdapter() } },
-    { name: "go", load: async () => { const { GoAdapter } = await import("@codeindex/adapter-go"); return new GoAdapter() } },
-    { name: "java", load: async () => { const { JavaAdapter } = await import("@codeindex/adapter-java"); return new JavaAdapter() } },
-    { name: "php", load: async () => { const { PhpAdapter } = await import("@codeindex/adapter-php"); return new PhpAdapter() } },
-    { name: "rust", load: async () => { const { RustAdapter } = await import("@codeindex/adapter-rust"); return new RustAdapter() } },
-    { name: "csharp", load: async () => { const { CSharpAdapter } = await import("@codeindex/adapter-csharp"); return new CSharpAdapter() } },
-    { name: "cpp", load: async () => { const { CppAdapter } = await import("@codeindex/adapter-cpp"); return new CppAdapter() } },
-    { name: "swift", load: async () => { const { SwiftAdapter } = await import("@codeindex/adapter-swift"); return new SwiftAdapter() } },
+    { name: "python", load: async () => { const { PythonAdapter } = await import("@codei/adapter-python"); return new PythonAdapter() } },
+    { name: "go", load: async () => { const { GoAdapter } = await import("@codei/adapter-go"); return new GoAdapter() } },
+    { name: "java", load: async () => { const { JavaAdapter } = await import("@codei/adapter-java"); return new JavaAdapter() } },
+    { name: "php", load: async () => { const { PhpAdapter } = await import("@codei/adapter-php"); return new PhpAdapter() } },
+    { name: "rust", load: async () => { const { RustAdapter } = await import("@codei/adapter-rust"); return new RustAdapter() } },
+    { name: "csharp", load: async () => { const { CSharpAdapter } = await import("@codei/adapter-csharp"); return new CSharpAdapter() } },
+    { name: "cpp", load: async () => { const { CppAdapter } = await import("@codei/adapter-cpp"); return new CppAdapter() } },
+    { name: "swift", load: async () => { const { SwiftAdapter } = await import("@codei/adapter-swift"); return new SwiftAdapter() } },
   ]
 
   for (const { name, load } of optionalAdapters) {
@@ -43,7 +43,7 @@ async function loadAllAdapters(verbose = false): Promise<LanguageAdapter[]> {
   return adapters
 }
 
-export function createLLMClient(config: CodeIndexConfig): LLMClient {
+export function createLLMClient(config: CodeiConfig): LLMClient {
   const apiKey = resolveApiKey(config)
 
   switch (config.provider) {
@@ -89,7 +89,7 @@ export function createNoopLLMClient(): LLMClient {
 
 export async function createIndexManager(
   projectRoot: string,
-  config: CodeIndexConfig,
+  config: CodeiConfig,
   llmClient: LLMClient
 ): Promise<IndexManager> {
   const adapters = await loadAllAdapters(config.verbose)

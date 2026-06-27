@@ -1,6 +1,6 @@
-# @codeindex/adapter-cpp
+# @codei/adapter-cpp
 
-**C/C++ language adapter for codeindex** — Parses C/C++ classes, structs, and functions.
+**C/C++ language adapter for codei** — Parses C/C++ classes, structs, and functions.
 
 ## Supported Extensions
 
@@ -11,18 +11,18 @@
 
 ## What It Does
 
-- Extracts top-level symbols for `codeindex`
+- Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
+- Fits the standard `LanguageAdapter` interface used by `@codei/core`
 
 ## Usage
 
 ```typescript
-import { CppAdapter } from "@codeindex/adapter-cpp"
+import { CppAdapter } from "@codei/adapter-cpp"
 
 const adapter = new CppAdapter()
 ```
 
 ## License
 
-MIT — See [main repo](https://github.com/zorrong/codeindex)
+MIT — See [main repo](https://github.com/zorrong/codei)

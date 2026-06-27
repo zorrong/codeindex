@@ -1,16 +1,16 @@
-# @codeindex/cli
+# @codei/cli
 
 **Vectorless, reasoning-based code index for AI context retrieval.**
 
 > Cut your AI coding costs by 95%. `codei` gives AI exactly the context it needs — nothing more.
 
-> Brand note: the product and CLI are now called `codei`. The `i` stands for both `index` and `intelligent` context retrieval. The package name stays `@codeindex/cli` for compatibility with the existing npm scope.
+> Brand note: the product and CLI are now called `codei`. The `i` stands for both `index` and `intelligent` context retrieval. The published CLI package is `@codei/cli`, while the core and adapter packages remain under `@codei/*`.
 
 ## Quick Start
 
 ```bash
 # Install
-npm install -g @codeindex/cli
+npm install -g @codei/cli
 
 # Setup once globally
 codei setup
@@ -38,10 +38,10 @@ codei query "How does authentication work?"
 ## Global Config
 
 ```env
-CODEINDEX_PROVIDER=nvidia
-CODEINDEX_API_KEY=nvapi-...
-CODEINDEX_MODEL=minimaxai/minimax-m3
-CODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1
+CODEI_PROVIDER=nvidia
+CODEI_API_KEY=nvapi-...
+CODEI_MODEL=minimaxai/minimax-m3
+CODEI_BASE_URL=https://integrate.api.nvidia.com/v1
 ```
 
 `codei setup` writes global config to `~/.codei/config.json` and `~/.codei/.env`, so in most cases you only need to configure it once.
@@ -70,4 +70,4 @@ When you need context, run:
 
 ## License
 
-MIT — See [main repo](https://github.com/zorrong/codeindex)
+MIT — See [main repo](https://github.com/zorrong/codei)

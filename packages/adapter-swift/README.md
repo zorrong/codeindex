@@ -1,6 +1,6 @@
-# @codeindex/adapter-swift
+# @codei/adapter-swift
 
-**Swift language adapter for codeindex** — Parses Swift types, protocols, functions, and properties.
+**Swift language adapter for codei** — Parses Swift types, protocols, functions, and properties.
 
 ## Supported Extensions
 
@@ -8,18 +8,18 @@
 
 ## What It Does
 
-- Extracts top-level symbols for `codeindex`
+- Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
+- Fits the standard `LanguageAdapter` interface used by `@codei/core`
 
 ## Usage
 
 ```typescript
-import { SwiftAdapter } from "@codeindex/adapter-swift"
+import { SwiftAdapter } from "@codei/adapter-swift"
 
 const adapter = new SwiftAdapter()
 ```
 
 ## License
 
-MIT — See [main repo](https://github.com/zorrong/codeindex)
+MIT — See [main repo](https://github.com/zorrong/codei)

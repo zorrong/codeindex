@@ -1,6 +1,6 @@
-# @codeindex/adapter-go
+# @codei/adapter-go
 
-**Go language adapter for codeindex** — Parses Go source for packages, types, and functions.
+**Go language adapter for codei** — Parses Go source for packages, types, and functions.
 
 ## Supported Extensions
 
@@ -8,18 +8,18 @@
 
 ## What It Does
 
-- Extracts top-level symbols for `codeindex`
+- Extracts top-level symbols for `codei`
 - Captures imports or module references when possible
-- Fits the standard `LanguageAdapter` interface used by `@codeindex/core`
+- Fits the standard `LanguageAdapter` interface used by `@codei/core`
 
 ## Usage
 
 ```typescript
-import { GoAdapter } from "@codeindex/adapter-go"
+import { GoAdapter } from "@codei/adapter-go"
 
 const adapter = new GoAdapter()
 ```
 
 ## License
 
-MIT — See [main repo](https://github.com/zorrong/codeindex)
+MIT — See [main repo](https://github.com/zorrong/codei)

@@ -2,14 +2,14 @@
 
 ## Overview
 
-`codeindex` is a vectorless, reasoning-based code index system. Instead of using vector embeddings for similarity search, it builds a hierarchical tree index and uses LLM reasoning to traverse and retrieve relevant context.
+`codei` is a vectorless, reasoning-based code index system. Instead of using vector embeddings for similarity search, it builds a hierarchical tree index and uses LLM reasoning to traverse and retrieve relevant context.
 
 ## Why Vectorless?
 
 | Approach | Pros | Cons |
 |----------|------|------|
 | Vector Embeddings | Fast similarity search | Requires external storage, token overhead for indexing, embedding drift over time |
-| **LLM Reasoning (codeindex)** | **Deterministic**, no external storage, always up-to-date | Slightly slower queries |
+| **LLM Reasoning (codei)** | **Deterministic**, no external storage, always up-to-date | Slightly slower queries |
 
 ## Core Principles
 

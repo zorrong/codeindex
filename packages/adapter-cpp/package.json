@@ -1,5 +1,5 @@
 {
-  "name": "@codeindex/adapter-cpp",
+  "name": "@codei/adapter-cpp",
   "version": "0.1.0",
   "description": "C/C++ language adapter using regex-based extraction",
   "type": "module",
@@ -16,14 +16,14 @@
     "test": "echo 'adapter-cpp: no tests yet'"
   },
   "dependencies": {
-    "@codeindex/core": "workspace:*"
+    "@codei/core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.7.3"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zorrong/codeindex.git"
+    "url": "git+https://github.com/zorrong/codei.git"
   },
   "keywords": [
     "codebase",

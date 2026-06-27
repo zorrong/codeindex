@@ -1,6 +1,6 @@
-# @codeindex/adapter-typescript
+# @codei/adapter-typescript
 
-**TypeScript/JavaScript language adapter for codeindex** — Uses ts-morph for full AST parsing.
+**TypeScript/JavaScript language adapter for codei** — Uses ts-morph for full AST parsing.
 
 ## Features
 
@@ -20,7 +20,7 @@
 ## Usage
 
 ```typescript
-import { TypeScriptAdapter } from "@codeindex/adapter-typescript"
+import { TypeScriptAdapter } from "@codei/adapter-typescript"
 
 const adapter = new TypeScriptAdapter()
 
@@ -30,4 +30,4 @@ const parsed = await adapter.parseFile("src/auth/service.ts", "/project")
 
 ## License
 
-MIT — See [main repo](https://github.com/zorrong/codeindex)
+MIT — See [main repo](https://github.com/zorrong/codei)

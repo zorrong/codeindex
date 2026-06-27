@@ -9,8 +9,8 @@ import { inspectConfig, loadConfig, resolveApiKey } from "../src/config.js"
 import * as fs from "fs/promises"
 import * as path from "path"
 import * as os from "os"
-import type { LLMClient, LLMResponse } from "@codeindex/core"
-import { FileSystemIndexStore, TreeBuilder } from "@codeindex/core"
+import type { LLMClient, LLMResponse } from "@codei/core"
+import { FileSystemIndexStore, TreeBuilder } from "@codei/core"
 
 // ─── Mock LLM ────────────────────────────────────────────────────────────────
 
@@ -81,7 +81,7 @@ describe("loadConfig", () => {
   it("should read provider and API key from global .env", async () => {
     await fs.writeFile(
       path.join(globalDir, ".env"),
-      "CODEINDEX_PROVIDER=nvidia\nCODEINDEX_API_KEY=test-global-key\nCODEINDEX_MODEL=minimaxai/minimax-m3\n"
+      "CODEI_PROVIDER=nvidia\nCODEI_API_KEY=test-global-key\nCODEI_MODEL=minimaxai/minimax-m3\n"
     )
 
     const config = loadConfig(tmpDir)
@@ -104,7 +104,7 @@ describe("loadConfig", () => {
     )
     await fs.writeFile(
       path.join(globalDir, ".env"),
-      "CODEINDEX_PROVIDER=nvidia\nCODEINDEX_API_KEY=test-global-key-env-priority\nCODEINDEX_MODEL=minimaxai/minimax-m3\nCODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1\n"
+      "CODEI_PROVIDER=nvidia\nCODEI_API_KEY=test-global-key-env-priority\nCODEI_MODEL=minimaxai/minimax-m3\nCODEI_BASE_URL=https://integrate.api.nvidia.com/v1\n"
     )
 
     const config = loadConfig(tmpDir)
@@ -133,8 +133,8 @@ describe("loadConfig", () => {
     expect(resolveApiKey(config)).toBe("legacy-migrate-key")
 
     const migratedEnv = await fs.readFile(path.join(globalDir, ".env"), "utf-8")
-    expect(migratedEnv).toContain("CODEINDEX_PROVIDER=nvidia")
-    expect(migratedEnv).toContain("CODEINDEX_API_KEY=legacy-migrate-key")
+    expect(migratedEnv).toContain("CODEI_PROVIDER=nvidia")
+    expect(migratedEnv).toContain("CODEI_API_KEY=legacy-migrate-key")
 
     await fs.unlink(path.join(globalDir, ".env"))
     await fs.unlink(path.join(globalDir, "config.json"))
@@ -143,7 +143,7 @@ describe("loadConfig", () => {
   it("should keep global runtime config even if project .codei.json contains provider/model", async () => {
     await fs.writeFile(
       path.join(globalDir, ".env"),
-      "CODEINDEX_PROVIDER=nvidia\nCODEINDEX_API_KEY=test-global-key-2\nCODEINDEX_MODEL=minimaxai/minimax-m3\n"
+      "CODEI_PROVIDER=nvidia\nCODEI_API_KEY=test-global-key-2\nCODEI_MODEL=minimaxai/minimax-m3\n"
     )
     await fs.writeFile(
       path.join(tmpDir, ".codei.json"),
@@ -163,7 +163,7 @@ describe("loadConfig", () => {
   it("should explain config sources for global env and project config", async () => {
     await fs.writeFile(
       path.join(globalDir, ".env"),
-      "CODEINDEX_PROVIDER=nvidia\nCODEINDEX_API_KEY=test-global-key-3\nCODEINDEX_MODEL=minimaxai/minimax-m3\n"
+      "CODEI_PROVIDER=nvidia\nCODEI_API_KEY=test-global-key-3\nCODEI_MODEL=minimaxai/minimax-m3\n"
     )
     await fs.writeFile(
       path.join(tmpDir, ".codei.json"),
@@ -192,7 +192,7 @@ describe("loadConfig", () => {
   it("should read provider and API key from project .env", async () => {
     await fs.writeFile(
       path.join(tmpDir, ".env"),
-      "CODEINDEX_PROVIDER=nvidia\nNVIDIA_API_KEY=test-nvidia-key\nCODEINDEX_MODEL=minimaxai/minimax-m3\n"
+      "CODEI_PROVIDER=nvidia\nNVIDIA_API_KEY=test-nvidia-key\nCODEI_MODEL=minimaxai/minimax-m3\n"
     )
 
     const config = loadConfig(tmpDir)
@@ -203,10 +203,10 @@ describe("loadConfig", () => {
     await fs.unlink(path.join(tmpDir, ".env"))
   })
 
-  it("should infer nvidia provider from project .env without CODEINDEX_PROVIDER", async () => {
+  it("should infer nvidia provider from project .env without CODEI_PROVIDER", async () => {
     await fs.writeFile(
       path.join(tmpDir, ".env"),
-      "NVIDIA_API_KEY=test-nvidia-key-2\nCODEINDEX_BASE_URL=https://integrate.api.nvidia.com/v1\n"
+      "NVIDIA_API_KEY=test-nvidia-key-2\nCODEI_BASE_URL=https://integrate.api.nvidia.com/v1\n"
     )
 
     const config = loadConfig(tmpDir)
